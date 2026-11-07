@@ -1,0 +1,2742 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f5f3ed" />
+    <title>Mindfield — A little workout for your brain</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+      :root {
+        --ink: #182421;
+        --muted: #718079;
+        --paper: #f5f3ed;
+        --card: #fffefa;
+        --line: #e7e5dc;
+        --green: #a7ed83;
+        --darkgreen: #426b4d;
+        --orange: #f4a77b;
+        --blue: #a9c7f8;
+        --lav: #d2bbf4;
+        --yellow: #f4dc78;
+        --radius: 22px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: "DM Sans", sans-serif;
+        min-height: 100vh;
+      }
+      button {
+        font: inherit;
+        color: inherit;
+        cursor: pointer;
+      }
+      .shell {
+        max-width: 1120px;
+        margin: auto;
+        padding: 24px 32px 64px;
+      }
+      .topbar {
+        height: 62px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font:
+          700 19px "Space Grotesk",
+          sans-serif;
+        letter-spacing: -0.7px;
+      }
+      .brand-mark {
+        width: 28px;
+        height: 28px;
+        border-radius: 9px;
+        background: var(--ink);
+        display: grid;
+        place-items: center;
+        color: var(--green);
+        font-size: 17px;
+      }
+      .top-note {
+        font:
+          11px "DM Mono",
+          monospace;
+        text-transform: uppercase;
+        letter-spacing: 1.1px;
+        color: var(--muted);
+      }
+      .hero {
+        padding: 65px 0 37px;
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 24px;
+      }
+      .eyebrow {
+        font:
+          11px "DM Mono",
+          monospace;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--darkgreen);
+        margin-bottom: 15px;
+      }
+      .hero h1 {
+        font:
+          600 clamp(42px, 7vw, 76px)/0.99 "Space Grotesk",
+          sans-serif;
+        letter-spacing: -4.6px;
+        margin: 0;
+        max-width: 720px;
+      }
+      .hero h1 span {
+        color: #9cad9d;
+      }
+      .hero p {
+        color: var(--muted);
+        line-height: 1.65;
+        font-size: 15px;
+        max-width: 460px;
+        margin: 20px 0 0;
+      }
+      .hero-art {
+        width: 142px;
+        height: 142px;
+        flex: none;
+        border-radius: 50%;
+        background: var(--green);
+        display: grid;
+        place-items: center;
+        position: relative;
+        margin: 0 23px 7px 0;
+      }
+      .hero-art:before,
+      .hero-art:after {
+        content: "";
+        position: absolute;
+        border: 1.5px solid var(--ink);
+        width: 66px;
+        height: 66px;
+        border-radius: 50%;
+      }
+      .hero-art:after {
+        width: 30px;
+        height: 30px;
+        background: var(--ink);
+        border: 0;
+      }
+      .orbit {
+        position: absolute;
+        width: 178px;
+        height: 62px;
+        border: 1px solid #45634b;
+        border-radius: 50%;
+        transform: rotate(-35deg);
+      }
+      .dashboard {
+        display: grid;
+        grid-template-columns: 1fr 280px;
+        gap: 18px;
+      }
+      .main-card,
+      .side-card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+      }
+      .main-card {
+        padding: 26px 28px 28px;
+        min-height: 405px;
+      }
+      .side-card {
+        padding: 24px;
+      }
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .section-label,
+      .count {
+        font:
+          11px "DM Mono",
+          monospace;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .count {
+        color: var(--ink);
+      }
+      .progress {
+        height: 5px;
+        background: #eeede6;
+        border-radius: 10px;
+        margin-bottom: 25px;
+        overflow: hidden;
+      }
+      .progress span {
+        height: 100%;
+        background: var(--darkgreen);
+        width: 0;
+        display: block;
+        transition: width 0.35s;
+        border-radius: 10px;
+      }
+      .category {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        border-radius: 99px;
+        padding: 6px 10px;
+        font-size: 11px;
+        font-weight: 600;
+        background: #edf5e9;
+        color: #45674d;
+      }
+      .question {
+        font:
+          600 clamp(21px, 3vw, 28px)/1.3 "Space Grotesk",
+          sans-serif;
+        letter-spacing: -0.6px;
+        margin: 18px 0 18px;
+        max-width: 740px;
+      }
+      .visual {
+        height: 118px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        margin: 0 0 20px;
+      }
+      .sequence {
+        display: flex;
+        align-items: center;
+        gap: clamp(7px, 2vw, 17px);
+        font-size: 31px;
+      }
+      .sequence .seq-cell {
+        width: 51px;
+        height: 51px;
+        display: grid;
+        place-items: center;
+        border-radius: 14px;
+        background: #f1f0e9;
+        font-size: 29px;
+      }
+      .sequence .missing {
+        background: #e7efdf;
+        color: #627864;
+        font-size: 18px;
+        font-family: "DM Mono", monospace;
+      }
+      .choices {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 9px;
+      }
+      .choice {
+        border: 1px solid var(--line);
+        background: #fffefa;
+        border-radius: 13px;
+        padding: 12px 14px;
+        text-align: left;
+        display: flex;
+        gap: 11px;
+        align-items: center;
+        min-height: 49px;
+        transition: 0.16s;
+      }
+      .choice:hover:not(:disabled) {
+        border-color: #9ab999;
+        background: #f8fbf5;
+        transform: translateY(-1px);
+      }
+      .choice:disabled {
+        cursor: default;
+      }
+      .choice .letter {
+        width: 24px;
+        height: 24px;
+        display: grid;
+        place-items: center;
+        border-radius: 8px;
+        background: #f1f0e9;
+        font:
+          11px "DM Mono",
+          monospace;
+        flex: none;
+      }
+      .choice.correct {
+        border-color: #6aa276;
+        background: #eff8ed;
+      }
+      .choice.correct .letter {
+        background: #b9e9ac;
+      }
+      .choice.wrong {
+        border-color: #d88973;
+        background: #fff1eb;
+      }
+      .choice.wrong .letter {
+        background: #f5c0a8;
+      }
+      .choice-text {
+        font-size: 14px;
+      }
+      .feedback {
+        display: none;
+        margin-top: 14px;
+        padding: 13px 15px;
+        border-radius: 12px;
+        background: #f3f5ed;
+        font-size: 13px;
+        line-height: 1.55;
+        color: #48594b;
+      }
+      .feedback.show {
+        display: block;
+      }
+      .controls {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 18px;
+      }
+      .hint-btn,
+      .next-btn,
+      .restart-btn {
+        border: 0;
+        border-radius: 11px;
+        padding: 11px 16px;
+        font-weight: 600;
+        font-size: 13px;
+      }
+      .hint-btn {
+        background: #f2f1e9;
+        color: #68766b;
+      }
+      .hint-btn:hover {
+        background: #e9e8de;
+      }
+      .next-btn {
+        background: var(--ink);
+        color: white;
+        padding: 12px 19px;
+      }
+      .next-btn:hover {
+        background: #31443a;
+      }
+      .next-btn:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+      }
+      .hint {
+        display: none;
+        font-size: 12px;
+        color: #65756a;
+        margin: 10px 0 0 2px;
+      }
+      .hint.show {
+        display: block;
+      }
+      .side-title {
+        font:
+          600 18px "Space Grotesk",
+          sans-serif;
+        letter-spacing: -0.3px;
+        margin: 0 0 5px;
+      }
+      .side-sub {
+        font-size: 12px;
+        color: var(--muted);
+        margin: 0 0 20px;
+      }
+      .stat {
+        border-top: 1px solid var(--line);
+        padding: 14px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .stat-name {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        font-size: 13px;
+      }
+      .dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+      }
+      .stat-val {
+        font:
+          12px "DM Mono",
+          monospace;
+        color: #647069;
+      }
+      .score-box {
+        margin-top: 8px;
+        background: #f1f4ec;
+        border-radius: 15px;
+        padding: 16px;
+      }
+      .score-box .score-label {
+        font:
+          10px "DM Mono",
+          monospace;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--muted);
+      }
+      .score-number {
+        font:
+          600 35px "Space Grotesk",
+          sans-serif;
+        letter-spacing: -1.5px;
+        margin: 3px 0 0;
+      }
+      .score-number small {
+        font:
+          12px "DM Sans",
+          sans-serif;
+        color: var(--muted);
+        letter-spacing: 0;
+      }
+      .side-foot {
+        font-size: 11px;
+        color: var(--muted);
+        line-height: 1.5;
+        margin: 14px 1px 0;
+      }
+      .result {
+        display: none;
+        text-align: center;
+        padding: 55px 15px;
+      }
+      .result.show {
+        display: block;
+      }
+      .result-symbol {
+        font-size: 48px;
+        margin-bottom: 15px;
+      }
+      .result h2 {
+        font:
+          600 39px "Space Grotesk",
+          sans-serif;
+        letter-spacing: -1.5px;
+        margin: 0;
+      }
+      .result p {
+        color: var(--muted);
+        max-width: 430px;
+        line-height: 1.6;
+        margin: 12px auto 24px;
+      }
+      .restart-btn {
+        background: var(--ink);
+        color: white;
+      }
+      .footer {
+        display: flex;
+        justify-content: space-between;
+        color: #939c93;
+        font-size: 11px;
+        margin: 19px 3px 0;
+      }
+      .footer span:last-child {
+        font-family: "DM Mono", monospace;
+      }
+      .game-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 0 0 19px;
+        max-height: 132px;
+        overflow: auto;
+        padding: 1px 1px 4px;
+      }
+      .game-tab {
+        border: 1px solid var(--line);
+        background: #f8f7f1;
+        color: var(--muted);
+        border-radius: 10px;
+        padding: 8px 13px;
+        font-size: 12px;
+        font-weight: 600;
+        transition: 0.2s;
+      }
+      .game-tab.active {
+        background: var(--ink);
+        color: white;
+        border-color: var(--ink);
+      }
+      .memory-note {
+        text-align: center;
+        color: var(--muted);
+        font:
+          11px "DM Mono",
+          monospace;
+        letter-spacing: 0.5px;
+        margin: -8px 0 15px;
+        animation: rise 0.3s ease;
+      }
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(9px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes pop {
+        0% {
+          transform: scale(0.9);
+          opacity: 0.45;
+        }
+        65% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      @keyframes wobble {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-4px);
+        }
+        75% {
+          transform: translateX(4px);
+        }
+      }
+      .question,
+      .visual,
+      .choices,
+      .category {
+        animation: rise 0.36s ease both;
+      }
+      .visual {
+        animation-delay: 0.04s;
+      }
+      .choices {
+        animation-delay: 0.08s;
+      }
+      .sequence .seq-cell {
+        animation: pop 0.32s ease both;
+      }
+      .sequence .seq-cell:nth-child(2) {
+        animation-delay: 0.04s;
+      }
+      .sequence .seq-cell:nth-child(3) {
+        animation-delay: 0.08s;
+      }
+      .sequence .seq-cell:nth-child(4) {
+        animation-delay: 0.12s;
+      }
+      .sequence .seq-cell:nth-child(5) {
+        animation-delay: 0.16s;
+      }
+      .sequence .seq-cell:nth-child(6) {
+        animation-delay: 0.2s;
+      }
+      .choice.correct {
+        animation: pop 0.34s ease;
+      }
+      .choice.wrong {
+        animation: wobble 0.3s ease;
+      }
+      .feedback.show {
+        animation: rise 0.28s ease;
+      }
+      .result-symbol {
+        animation: pop 0.55s ease;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          scroll-behavior: auto !important;
+        }
+      }
+      .motion-scene {
+        width: min(300px, 100%);
+        height: 102px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f4f3ec;
+        border-radius: 16px;
+        overflow: hidden;
+      }
+      .motion-orbit {
+        width: 70px;
+        height: 70px;
+        border: 1px solid #aeb8a9;
+        border-radius: 50%;
+        position: absolute;
+        animation: orbitSpin 3s linear infinite;
+      }
+      .motion-orbit i {
+        position: absolute;
+        width: 13px;
+        height: 13px;
+        border-radius: 50%;
+        background: #6f9a69;
+        top: -7px;
+        left: 28px;
+      }
+      .motion-center {
+        font-size: 21px;
+      }
+      .motion-pendulum {
+        position: absolute;
+        top: 14px;
+        width: 2px;
+        height: 65px;
+        background: #426b4d;
+        transform-origin: top center;
+        animation: swing 2s ease-in-out infinite alternate;
+      }
+      .motion-pendulum i {
+        position: absolute;
+        width: 19px;
+        height: 19px;
+        bottom: -10px;
+        left: -8px;
+        border-radius: 50%;
+        background: #f0aa77;
+      }
+      .motion-gear {
+        font-size: 40px;
+        color: #637b62;
+        animation: gearTurn 4s linear infinite;
+      }
+      .motion-gear.second {
+        font-size: 30px;
+        color: #bb8a67;
+        animation-direction: reverse;
+        margin-left: -4px;
+      }
+      .race-lanes {
+        width: 82%;
+        display: grid;
+        gap: 13px;
+      }
+      .race-lane {
+        height: 17px;
+        border-bottom: 1px dashed #b9c0b3;
+        position: relative;
+        font:
+          9px "DM Mono",
+          monospace;
+        color: #7b8578;
+      }
+      .race-ball {
+        position: absolute;
+        left: 0;
+        bottom: -5px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #74966d;
+        animation: raceMove 2.7s ease-in infinite;
+      }
+      .race-ball.mid {
+        left: 37%;
+        background: #dc9870;
+        animation-duration: 1.7s;
+      }
+      .motion-bounce {
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
+      .motion-bounce:before {
+        content: "";
+        position: absolute;
+        left: 15%;
+        right: 15%;
+        bottom: 20px;
+        height: 1px;
+        background: #aeb8a9;
+      }
+      .motion-bounce i {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        left: calc(50% - 10px);
+        bottom: 21px;
+        border-radius: 50%;
+        background: #d8a351;
+        animation: bounceBall 1.15s ease-in-out infinite;
+      }
+      .motion-spinner {
+        font-size: 44px;
+        color: #8e79be;
+        animation: gearTurn 2s ease-in-out infinite;
+      }
+      .motion-wave {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        height: 75px;
+      }
+      .motion-wave i {
+        width: 13px;
+        height: 13px;
+        border-radius: 50%;
+        background: #7ca3d3;
+        animation: waveHop 1.2s ease-in-out infinite;
+      }
+      .motion-wave i:nth-child(2) {
+        animation-delay: 0.15s;
+      }
+      .motion-wave i:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+      .motion-wave i:nth-child(4) {
+        animation-delay: 0.45s;
+      }
+      .motion-wave i:nth-child(5) {
+        animation-delay: 0.6s;
+      }
+      .motion-signals {
+        display: flex;
+        gap: 15px;
+      }
+      .motion-signals i {
+        width: 19px;
+        height: 19px;
+        border-radius: 50%;
+        background: #c8cbbf;
+        animation: signal 2.4s infinite;
+      }
+      .motion-signals i:nth-child(1) {
+        animation-delay: 0s;
+      }
+      .motion-signals i:nth-child(2) {
+        animation-delay: 0.8s;
+      }
+      .motion-signals i:nth-child(3) {
+        animation-delay: 1.6s;
+      }
+      @keyframes orbitSpin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes swing {
+        from {
+          transform: rotate(-35deg);
+        }
+        to {
+          transform: rotate(35deg);
+        }
+      }
+      @keyframes gearTurn {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes raceMove {
+        0% {
+          transform: translateX(0);
+        }
+        75%,
+        100% {
+          transform: translateX(210px);
+        }
+      }
+      @keyframes bounceBall {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-55px);
+        }
+      }
+      @keyframes waveHop {
+        0%,
+        100% {
+          transform: translateY(13px);
+        }
+        50% {
+          transform: translateY(-13px);
+        }
+      }
+      @keyframes signal {
+        0%,
+        25% {
+          background: #7fae73;
+          box-shadow: 0 0 12px #bce0aa;
+        }
+        26%,
+        100% {
+          background: #c8cbbf;
+          box-shadow: none;
+        }
+      }
+      .motion-signals i:nth-child(1) {
+        color: #43a85c;
+        background: #43a85c;
+      }
+      .motion-signals i:nth-child(2) {
+        color: #e9ae32;
+        background: #e9ae32;
+      }
+      .motion-signals i:nth-child(3) {
+        color: #d94e48;
+        background: #d94e48;
+      }
+      @keyframes signal {
+        0%,
+        25% {
+          filter: brightness(1.18);
+          box-shadow: 0 0 12px currentColor;
+        }
+        26%,
+        100% {
+          filter: brightness(0.68);
+          box-shadow: none;
+        }
+      }
+      .play-sound {
+        border: 1px solid #dce2d7;
+        background: #f9fbf6;
+        color: #426b4d;
+        border-radius: 10px;
+        padding: 9px 12px;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .play-sound:hover {
+        background: #edf5e9;
+      }
+      @media (max-width: 760px) {
+        .shell {
+          padding: 16px 17px 40px;
+        }
+        .hero {
+          padding: 45px 0 29px;
+        }
+        .hero h1 {
+          letter-spacing: -2.7px;
+        }
+        .hero-art {
+          width: 93px;
+          height: 93px;
+          margin: 0 6px 10px 0;
+        }
+        .hero-art:before {
+          width: 48px;
+          height: 48px;
+        }
+        .hero-art:after {
+          width: 22px;
+          height: 22px;
+        }
+        .orbit {
+          width: 120px;
+          height: 42px;
+        }
+        .dashboard {
+          grid-template-columns: 1fr;
+        }
+        .side-card {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 0 20px;
+        }
+        .side-card > h2,
+        .side-card > .side-sub,
+        .side-foot {
+          grid-column: 1/-1;
+        }
+        .side-card > .stat {
+          padding: 10px 0;
+        }
+        .score-box {
+          align-self: center;
+        }
+        .main-card {
+          padding: 20px 17px;
+        }
+        .footer {
+          gap: 12px;
+          line-height: 1.5;
+        }
+        .top-note {
+          font-size: 9px;
+        }
+      }
+      @media (max-width: 480px) {
+        .hero-art {
+          display: none;
+        }
+        .hero {
+          padding-top: 39px;
+        }
+        .choices {
+          grid-template-columns: 1fr;
+        }
+        .visual {
+          height: 92px;
+        }
+        .sequence {
+          gap: 6px;
+        }
+        .sequence .seq-cell {
+          width: 40px;
+          height: 43px;
+          font-size: 24px;
+        }
+        .question {
+          font-size: 23px;
+        }
+        .side-card {
+          grid-template-columns: 1fr;
+        }
+        .side-card > * {
+          grid-column: 1/-1;
+        }
+        .score-box {
+          margin-top: 14px;
+        }
+        .top-note {
+          max-width: 130px;
+          text-align: right;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark">✳</div>
+          mindfield
+        </div>
+        <div class="top-note">A little workout for your brain</div>
+      </header>
+      <section class="hero">
+        <div>
+          <div class="eyebrow">Curiosity, meet challenge&nbsp; · &nbsp;01</div>
+          <h1>Give your brain<br /><span>some room to play.</span></h1>
+          <p>
+            Eight playful puzzle packs for memory, words, shapes, deduction,
+            estimation and physics. Take your time. Stay curious.
+          </p>
+        </div>
+        <div class="hero-art"><div class="orbit"></div></div>
+      </section>
+      <div class="dashboard">
+        <main class="main-card">
+          <div class="game-tabs" id="gameTabs"></div>
+          <div id="quiz">
+            <div class="section-head">
+              <span class="section-label">Your puzzle set</span
+              ><span class="count" id="count">01 / 08</span>
+            </div>
+            <div class="progress"><span id="progress"></span></div>
+            <div class="category" id="category"></div>
+            <h2 class="question" id="question"></h2>
+            <div class="visual" id="visual"></div>
+            <div class="choices" id="choices"></div>
+            <div class="hint" id="hint"></div>
+            <div class="feedback" id="feedback"></div>
+            <div class="controls">
+              <button class="hint-btn" id="hintBtn">
+                ☼ &nbsp; Need a nudge?</button
+              ><button class="next-btn" id="nextBtn">
+                Next question &nbsp; ↗
+              </button>
+            </div>
+          </div>
+          <div class="result" id="result">
+            <div class="result-symbol">✳</div>
+            <h2 id="resultTitle">Nicely done.</h2>
+            <p id="resultText"></p>
+            <button class="restart-btn" id="restart">
+              Play this game again &nbsp; ↗
+            </button>
+          </div>
+        </main>
+        <aside class="side-card">
+          <h2 class="side-title">The mix</h2>
+          <p class="side-sub">Eight puzzle packs. Pick one and play.</p>
+          <div class="stat">
+            <span class="stat-name"
+              ><i class="dot" style="background: #80b276"></i>Original
+              games</span
+            ><span class="stat-val">16</span>
+          </div>
+          <div class="stat">
+            <span class="stat-name"
+              ><i class="dot" style="background: #ac8de0"></i>New packs</span
+            ><span class="stat-val">48</span>
+          </div>
+          <div class="score-box">
+            <div class="score-label">Puzzles solved</div>
+            <div class="score-number">
+              <span id="score">0</span><small> / 8</small>
+            </div>
+          </div>
+          <p class="side-foot">
+            Just for fun and practice. This puzzle set isn't a standardized IQ
+            test.
+          </p>
+        </aside>
+      </div>
+      <div class="footer">
+        <span>Take a breath. There’s no clock on curiosity.</span
+        ><span>THINK PLAYFULLY&nbsp; ↗</span>
+      </div>
+    </div>
+    <script>
+      const gameOne = [
+        {
+          type: "Patterns",
+          icon: "◌",
+          q: "What number comes next in this sequence?",
+          visual: ["2", "6", "12", "20", "30", "?"],
+          choices: ["36", "40", "42", "44"],
+          answer: 2,
+          hint: "Look at the differences between neighboring numbers.",
+          explain:
+            "The gaps grow by 2 each time: +4, +6, +8, +10. The next gap is +12, so 30 + 12 = 42.",
+        },
+        {
+          type: "Shapes",
+          icon: "◇",
+          q: "Which shape completes the rotation pattern?",
+          visual: ["▲", "▶", "▼", "◀", "?"],
+          choices: ["▲", "▶", "▼", "◀"],
+          answer: 0,
+          hint: "The same shape turns a quarter turn clockwise at each step.",
+          explain:
+            "Each triangle rotates 90° clockwise: up, right, down, left, then back up.",
+        },
+        {
+          type: "Logic",
+          icon: "⌘",
+          q: "All the blue tiles are squares. Some squares are striped. Which statement must be true?",
+          visual: null,
+          choices: [
+            "All striped tiles are blue.",
+            "Some blue tiles are striped.",
+            "Every blue tile is a square.",
+            "No squares are blue.",
+          ],
+          answer: 2,
+          hint: "Use only the information given. “All” guarantees something about every blue tile.",
+          explain:
+            "The first sentence directly tells us every blue tile belongs to the group of squares. The striped squares may or may not be blue.",
+        },
+        {
+          type: "Physics",
+          icon: "↗",
+          q: "Two identical balls roll down the same smooth ramp. One starts halfway down. Which reaches the bottom first?",
+          visual: null,
+          choices: [
+            "The ball starting at the top",
+            "The ball starting halfway down",
+            "They arrive at the same time",
+            "There is not enough information",
+          ],
+          answer: 1,
+          hint: "Both speed up on the ramp, but one has less distance to travel.",
+          explain:
+            "The halfway ball has a shorter distance to cover. Even though the top ball gets more time to accelerate, in this setup the halfway ball reaches the bottom first.",
+        },
+        {
+          type: "Patterns",
+          icon: "◌",
+          q: "Which pair comes next in the repeating sequence?",
+          visual: ["○", "△", "△", "○", "△", "△", "?"],
+          choices: ["○", "△", "□", "◇"],
+          answer: 0,
+          hint: "Group the symbols into repeating chunks rather than looking at each one separately.",
+          explain:
+            "The sequence repeats in groups of three: circle, triangle, triangle. The next group starts with a circle.",
+        },
+        {
+          type: "Shapes",
+          icon: "◇",
+          q: "A square is folded in half from left to right. What shape is the fold line?",
+          visual: ["□", "→", "▯"],
+          choices: [
+            "A diagonal",
+            "A vertical line",
+            "A horizontal line",
+            "A curve",
+          ],
+          answer: 1,
+          hint: "Imagine the left and right edges meeting. Where does the crease run?",
+          explain:
+            "Folding the left side over to meet the right side makes a crease down the center, running vertically.",
+        },
+        {
+          type: "Logic",
+          icon: "⌘",
+          q: "Mia is taller than Lee. Lee is taller than Sam. Who is the shortest?",
+          visual: null,
+          choices: ["Mia", "Lee", "Sam", "Cannot tell"],
+          answer: 2,
+          hint: "Put the three people in order from tallest to shortest.",
+          explain: "The clues give Mia > Lee > Sam, so Sam is the shortest.",
+        },
+        {
+          type: "Physics",
+          icon: "↗",
+          q: "You balance a ruler on your finger at its exact center. What happens when you place equal coins at both ends?",
+          visual: null,
+          choices: [
+            "The left side dips",
+            "The right side dips",
+            "It stays balanced",
+            "It spins clockwise",
+          ],
+          answer: 2,
+          hint: "Think about how far each equal weight is from the balance point.",
+          explain:
+            "Equal weights placed at equal distances on opposite sides create matching turning effects, so the ruler stays balanced (assuming the coins are alike).",
+        },
+      ];
+      const gameTwo = [
+        {
+          type: "Patterns",
+          icon: "◌",
+          q: "What number belongs in the blank?",
+          visual: ["3", "6", "12", "24", "?"],
+          choices: ["36", "42", "48", "52"],
+          answer: 2,
+          hint: "Each number is made by doing the same thing to the one before it.",
+          explain: "Each number doubles: 3, 6, 12, 24, so the next is 48.",
+        },
+        {
+          type: "Shapes",
+          icon: "◇",
+          q: "Which tile comes next in this shape sequence?",
+          visual: ["●", "◐", "○", "◑", "?"],
+          choices: ["●", "◐", "○", "◑"],
+          answer: 0,
+          hint: "Watch how the filled half changes as the circle turns.",
+          explain:
+            "The fill rotates in quarter turns: full, right half, empty, left half, then full again.",
+        },
+        {
+          type: "Logic",
+          icon: "⌘",
+          q: "Kai, Noor and Eli each chose a different fruit: apple, pear or plum. Kai chose the pear. Noor did not choose the apple. What did Eli choose?",
+          visual: null,
+          choices: ["Apple", "Pear", "Plum", "Cannot tell"],
+          answer: 0,
+          hint: "Kai already has pear. Noor must have plum, leaving one fruit for Eli.",
+          explain:
+            "Kai has pear. Noor cannot have apple or pear, so Noor has plum. Eli has the apple.",
+        },
+        {
+          type: "Physics",
+          icon: "↗",
+          q: "A book rests on a table. Which way does the table push on the book?",
+          visual: null,
+          choices: ["Downward", "Upward", "Sideways", "It does not push"],
+          answer: 1,
+          hint: "The book is not falling through the table. What force holds it up?",
+          explain:
+            "The table pushes upward on the book with a support force, balancing the book’s downward weight while it rests.",
+        },
+        {
+          type: "Patterns",
+          icon: "◌",
+          q: "Which letter comes next?",
+          visual: ["A", "C", "F", "J", "O", "?"],
+          choices: ["S", "T", "U", "V"],
+          answer: 2,
+          hint: "The jumps through the alphabet get one letter larger each time.",
+          explain: "The steps are +2, +3, +4, +5 letters. Next is +6: O to U.",
+        },
+        {
+          type: "Shapes",
+          icon: "◇",
+          q: "Which shape has exactly one line of symmetry?",
+          visual: null,
+          choices: [
+            "A scalene triangle",
+            "A rectangle that is not a square",
+            "An isosceles triangle",
+            "A parallelogram",
+          ],
+          answer: 2,
+          hint: "A symmetry line splits a shape into two matching mirror halves.",
+          explain:
+            "An isosceles triangle has one line of symmetry from its top vertex to the midpoint of its base.",
+        },
+        {
+          type: "Logic",
+          icon: "⌘",
+          q: "Ava finished before Ben. Chen finished after Ben. Who finished in the middle?",
+          visual: null,
+          choices: ["Ava", "Ben", "Chen", "Cannot tell"],
+          answer: 1,
+          hint: "Put the finishers in order using both clues.",
+          explain:
+            "Ava finished first, then Ben, then Chen. Ben is in the middle.",
+        },
+        {
+          type: "Physics",
+          icon: "↗",
+          q: "A toy car rolls across a level floor and gradually slows down. What is the main reason?",
+          visual: null,
+          choices: [
+            "Gravity stops acting",
+            "Friction opposes its motion",
+            "The car becomes heavier",
+            "The floor pushes it forward",
+          ],
+          answer: 1,
+          hint: "The wheels and floor interact as the car moves.",
+          explain:
+            "Friction between the wheels and floor, along with air resistance, acts against the car’s motion and slows it down.",
+        },
+      ];
+      const gameMemory = [
+        {
+          type: "Memory",
+          icon: "◉",
+          memory: true,
+          q: "Which sequence did you just see?",
+          visual: ["●", "▲", "■", "●"],
+          choices: ["● ▲ ■ ●", "● ■ ▲ ●", "▲ ● ■ ●", "● ▲ ● ■"],
+          answer: 0,
+          hint: "Recall the symbol order from left to right.",
+          explain: "The sequence was circle, triangle, square, circle.",
+        },
+        {
+          type: "Memory",
+          icon: "◉",
+          memory: true,
+          q: "Which number sequence appeared?",
+          visual: ["4", "1", "7", "3"],
+          choices: [
+            "4 · 1 · 7 · 3",
+            "4 · 7 · 1 · 3",
+            "1 · 4 · 7 · 3",
+            "4 · 1 · 3 · 7",
+          ],
+          answer: 0,
+          hint: "Try repeating the sequence in your head.",
+          explain: "The numbers appeared in this order: 4, 1, 7, 3.",
+        },
+        {
+          type: "Memory",
+          icon: "◉",
+          memory: true,
+          q: "Which color order did you see?",
+          visual: ["🔵", "🟡", "🔴", "🟢"],
+          choices: [
+            "Blue, yellow, red, green",
+            "Blue, red, yellow, green",
+            "Yellow, blue, red, green",
+            "Blue, yellow, green, red",
+          ],
+          answer: 0,
+          hint: "Remember the first and last colors, then the middle pair.",
+          explain: "The order was blue, yellow, red, then green.",
+        },
+        {
+          type: "Memory",
+          icon: "◉",
+          memory: true,
+          q: "Which sequence was shown?",
+          visual: ["8", "2", "5", "9", "1"],
+          choices: [
+            "8 · 2 · 5 · 9 · 1",
+            "8 · 5 · 2 · 9 · 1",
+            "2 · 8 · 5 · 9 · 1",
+            "8 · 2 · 9 · 5 · 1",
+          ],
+          answer: 0,
+          hint: "Think of the sequence in two chunks.",
+          explain: "The five digits were 8, 2, 5, 9, 1.",
+        },
+        {
+          type: "Memory",
+          icon: "◉",
+          memory: true,
+          q: "Which shape came third?",
+          visual: ["◆", "○", "★", "△"],
+          choices: ["Diamond", "Circle", "Star", "Triangle"],
+          answer: 2,
+          hint: "Replay the four shapes in order.",
+          explain: "The star was third in the sequence.",
+        },
+        {
+          type: "Memory",
+          icon: "◉",
+          memory: true,
+          q: "Which way-point order did you see?",
+          visual: ["↑", "→", "↓", "←"],
+          choices: [
+            "Up, right, down, left",
+            "Up, down, right, left",
+            "Right, up, down, left",
+            "Up, right, left, down",
+          ],
+          answer: 0,
+          hint: "Picture the arrows turning around a compass.",
+          explain: "The arrows went clockwise: up, right, down, left.",
+        },
+        {
+          type: "Memory",
+          icon: "◉",
+          memory: true,
+          q: "Which two symbols were next to each other?",
+          visual: ["♣", "♥", "♦", "♠", "☀"],
+          choices: [
+            "Heart and diamond",
+            "Club and spade",
+            "Diamond and sun",
+            "Spade and heart",
+          ],
+          answer: 0,
+          hint: "Recall the adjacent pairs in the displayed row.",
+          explain:
+            "The heart and diamond appeared side by side in positions two and three.",
+        },
+        {
+          type: "Memory",
+          icon: "◉",
+          memory: true,
+          q: "What was the final number?",
+          visual: ["6", "3", "8", "2", "5"],
+          choices: ["6", "3", "8", "2", "5"],
+          answer: 4,
+          hint: "Recall the last item at the far right.",
+          explain: "The last number in the sequence was 5.",
+        },
+      ];
+      const gameWordplay = [
+        {
+          type: "Wordplay",
+          icon: "Aa",
+          q: "Rearrange the letters LISTEN to make a word meaning quiet.",
+          visual: null,
+          choices: ["Silent", "Enlist", "Tinsel", "Inlets"],
+          answer: 0,
+          hint: "The answer uses all six letters and describes a lack of sound.",
+          explain: "LISTEN and SILENT use the same six letters.",
+        },
+        {
+          type: "Wordplay",
+          icon: "Aa",
+          q: "Which word does not belong with the others?",
+          visual: null,
+          choices: ["Minute", "Second", "Hour", "Calendar"],
+          answer: 3,
+          hint: "Three are units used to measure time.",
+          explain:
+            "Minute, second and hour are units of time. A calendar organizes dates.",
+        },
+        {
+          type: "Wordplay",
+          icon: "Aa",
+          q: "What word connects “book”, “cake” and “candle”?",
+          visual: null,
+          choices: ["Birthday", "Library", "Wax", "Page"],
+          answer: 0,
+          hint: "Think of a celebration where you might find all three.",
+          explain: "A birthday can have a book as a gift, a cake and candles.",
+        },
+        {
+          type: "Wordplay",
+          icon: "Aa",
+          q: "Which word can go before “light”, “house” and “work”?",
+          visual: null,
+          choices: ["Fire", "Home", "Sun", "Water"],
+          answer: 0,
+          hint: "Try making three familiar compound words.",
+          explain: "Firelight, firehouse and firework are all words.",
+        },
+        {
+          type: "Wordplay",
+          icon: "Aa",
+          q: "Choose the word that completes both: “a ___ of keys” and “a ___ of flowers”.",
+          visual: null,
+          choices: ["Bunch", "Set", "Ring", "Bed"],
+          answer: 0,
+          hint: "Which collective noun sounds natural for both objects?",
+          explain:
+            "A bunch of keys and a bunch of flowers are both common phrases.",
+        },
+        {
+          type: "Wordplay",
+          icon: "Aa",
+          q: "Which is the odd one out?",
+          visual: null,
+          choices: ["Level", "Rotor", "Civic", "Paper"],
+          answer: 3,
+          hint: "Read each word forward and backward.",
+          explain: "Level, rotor and civic are palindromes. Paper is not.",
+        },
+        {
+          type: "Wordplay",
+          icon: "Aa",
+          q: "Complete the analogy: Bird is to nest as bee is to…",
+          visual: null,
+          choices: ["Web", "Hive", "Den", "Stable"],
+          answer: 1,
+          hint: "Choose the home most associated with a bee.",
+          explain: "A nest is a bird’s home; a hive is a bee’s home.",
+        },
+        {
+          type: "Wordplay",
+          icon: "Aa",
+          q: "What is the opposite of “scarce”?",
+          visual: null,
+          choices: ["Rare", "Plentiful", "Hidden", "Small"],
+          answer: 1,
+          hint: "Scarce means there is not much of something.",
+          explain:
+            "Plentiful means available in a large amount, the opposite of scarce.",
+        },
+      ];
+      const gameSpatial = [
+        {
+          type: "Spatial",
+          icon: "⬡",
+          q: "Imagine turning an arrow one quarter-turn clockwise. Which way will it point?",
+          visual: ["↑", "↻"],
+          choices: ["←", "→", "↓", "↑"],
+          answer: 1,
+          hint: "A quarter-turn is 90 degrees.",
+          explain:
+            "Turning up 90 degrees clockwise makes the arrow point right.",
+        },
+        {
+          type: "Spatial",
+          icon: "⬡",
+          q: "A square is reflected in a vertical mirror. What happens to its shape?",
+          visual: ["□", "↔", "□"],
+          choices: [
+            "It becomes a rectangle",
+            "It looks the same",
+            "It becomes a diamond",
+            "It becomes a triangle",
+          ],
+          answer: 1,
+          hint: "A square has matching sides and corners all around.",
+          explain:
+            "A square has vertical mirror symmetry, so its reflection looks unchanged.",
+        },
+        {
+          type: "Spatial",
+          icon: "⬡",
+          q: "A cube has a star on its top face. You turn the cube upside down. Where is the star?",
+          visual: ["★", "⬛"],
+          choices: [
+            "On the bottom face",
+            "On the left face",
+            "On the top face",
+            "Inside the cube",
+          ],
+          answer: 0,
+          hint: "Turning a cube upside down swaps top and bottom.",
+          explain:
+            "The original top face becomes the bottom face when the cube is flipped upside down.",
+        },
+        {
+          type: "Spatial",
+          icon: "⬡",
+          q: "Which shape can be made by joining two identical squares edge to edge?",
+          visual: null,
+          choices: ["A rectangle", "A circle", "A pentagon", "A triangle"],
+          answer: 0,
+          hint: "Keep the outside edges straight after joining the squares.",
+          explain:
+            "Two equal squares joined along one full side form a rectangle.",
+        },
+        {
+          type: "Spatial",
+          icon: "⬡",
+          q: "A paper strip is folded in half once. How many layers are stacked?",
+          visual: ["▱", "↘", "▱"],
+          choices: ["1", "2", "3", "4"],
+          answer: 1,
+          hint: "Each fold doubles the number of layers.",
+          explain: "One fold makes two layers of paper.",
+        },
+        {
+          type: "Spatial",
+          icon: "⬡",
+          q: "A small cube is painted on every outside face, then cut into 8 equal smaller cubes. How many small cubes have paint on three faces?",
+          visual: ["◧", "×8"],
+          choices: ["1", "4", "6", "8"],
+          answer: 3,
+          hint: "Which pieces sit at the original cube’s corners?",
+          explain: "Each of the eight corner cubes has three painted faces.",
+        },
+        {
+          type: "Spatial",
+          icon: "⬡",
+          q: "Which 2D shape has no corners?",
+          visual: null,
+          choices: ["Oval", "Rectangle", "Pentagon", "Triangle"],
+          answer: 0,
+          hint: "Look for a closed shape made only from a curved line.",
+          explain: "An oval has no corners or vertices.",
+        },
+        {
+          type: "Spatial",
+          icon: "⬡",
+          q: "You face north, turn right, then turn right again. Which way are you facing?",
+          visual: ["N", "↻", "↻"],
+          choices: ["North", "East", "South", "West"],
+          answer: 2,
+          hint: "Each right turn is a 90-degree clockwise turn.",
+          explain:
+            "North to east is one right turn; east to south is the second.",
+        },
+      ];
+      const gameDeduction = [
+        {
+          type: "Deduction",
+          icon: "⌘",
+          q: "A red, blue and green cup belong to Ava, Ben and Cleo, one each. Ava has red. Ben does not have blue. Which cup does Cleo have?",
+          visual: null,
+          choices: ["Red", "Blue", "Green", "Cannot tell"],
+          answer: 1,
+          hint: "Ava has red. Ben must have green, leaving one cup.",
+          explain:
+            "Ben cannot have blue and red is already Ava’s, so Ben has green. Cleo has blue.",
+        },
+        {
+          type: "Deduction",
+          icon: "⌘",
+          q: "Three friends finished first, second and third. Jo finished ahead of Kim. Lee finished after Kim. Who was first?",
+          visual: null,
+          choices: ["Jo", "Kim", "Lee", "Cannot tell"],
+          answer: 0,
+          hint: "Put the three finishers in order from the clues.",
+          explain: "Jo is ahead of Kim, and Lee is after Kim: Jo, Kim, Lee.",
+        },
+        {
+          type: "Deduction",
+          icon: "⌘",
+          q: "A cat, dog and bird each have a different toy: ball, bell and rope. The dog has the rope. The bird does not have the bell. What toy does the cat have?",
+          visual: null,
+          choices: ["Ball", "Bell", "Rope", "Cannot tell"],
+          answer: 1,
+          hint: "The dog has rope. Which toy is left for the bird if it cannot have the bell?",
+          explain: "The bird must have the ball, leaving the bell for the cat.",
+        },
+        {
+          type: "Deduction",
+          icon: "⌘",
+          q: "Three boxes are labeled apples, pears and mixed. Every label is wrong. Which box should you sample first to identify all three?",
+          visual: null,
+          choices: [
+            "The box labeled apples",
+            "The box labeled pears",
+            "The box labeled mixed",
+            "Any box works equally",
+          ],
+          answer: 2,
+          hint: "The “mixed” label is wrong, so that box contains only one kind.",
+          explain:
+            "Sample the box labeled mixed. Since its label is wrong, the fruit drawn tells you which single-fruit box it is; the other labels then determine the rest.",
+        },
+        {
+          type: "Deduction",
+          icon: "⌘",
+          q: "Four seats are in a row. Mira sits immediately left of Sol. Sol is not at either end. Which pair must sit together?",
+          visual: null,
+          choices: [
+            "Mira and Sol",
+            "Sol and an end seat",
+            "Mira and an end seat",
+            "Cannot tell",
+          ],
+          answer: 0,
+          hint: "“Immediately left” means there are no seats between them.",
+          explain:
+            "Mira is immediately to Sol’s left, so they must sit together regardless of the other seats.",
+        },
+        {
+          type: "Deduction",
+          icon: "⌘",
+          q: "A key is in one of three drawers. It is not in the top drawer. The middle drawer is empty. Where is the key?",
+          visual: null,
+          choices: ["Top", "Middle", "Bottom", "Cannot tell"],
+          answer: 2,
+          hint: "Eliminate the two drawers ruled out by the clues.",
+          explain:
+            "It is not in the top drawer and the middle is empty, so it must be in the bottom drawer.",
+        },
+        {
+          type: "Deduction",
+          icon: "⌘",
+          q: "Nia, Omar and Pia each chose tea, juice or water. Nia chose neither tea nor water. Omar chose water. What did Pia choose?",
+          visual: null,
+          choices: ["Tea", "Juice", "Water", "Cannot tell"],
+          answer: 0,
+          hint: "Nia’s only option is juice. Omar already has water.",
+          explain: "Nia has juice and Omar has water, leaving tea for Pia.",
+        },
+        {
+          type: "Deduction",
+          icon: "⌘",
+          q: "A small, medium and large parcel weigh different amounts. The small parcel is lighter than the medium. The large is heavier than the medium. Which is heaviest?",
+          visual: null,
+          choices: ["Small", "Medium", "Large", "Cannot tell"],
+          answer: 2,
+          hint: "Order the three weights using both comparisons.",
+          explain: "Small < medium < large, so the large parcel is heaviest.",
+        },
+      ];
+      const gameEstimation = [
+        {
+          type: "Estimation",
+          icon: "≈",
+          q: "About how many minutes are in one day?",
+          visual: null,
+          choices: ["144", "1,440", "14,400", "24,000"],
+          answer: 1,
+          hint: "There are 24 hours in a day. Multiply by 60 minutes per hour.",
+          explain: "24 × 60 = 1,440 minutes.",
+        },
+        {
+          type: "Estimation",
+          icon: "≈",
+          q: "About how many centimeters are in one meter?",
+          visual: null,
+          choices: ["10", "100", "1,000", "10,000"],
+          answer: 1,
+          hint: "A meter is 100 times as long as a centimeter.",
+          explain: "One meter equals 100 centimeters.",
+        },
+        {
+          type: "Estimation",
+          icon: "≈",
+          q: "A typical adult walking step is about 0.7 meters. Roughly how far is 1,000 steps?",
+          visual: null,
+          choices: ["70 m", "700 m", "7 km", "70 km"],
+          answer: 1,
+          hint: "Multiply the length of one step by 1,000.",
+          explain: "1,000 × 0.7 m is about 700 meters.",
+        },
+        {
+          type: "Estimation",
+          icon: "≈",
+          q: "About how long does light take to travel from the Sun to Earth?",
+          visual: null,
+          choices: ["8 seconds", "8 minutes", "8 hours", "8 days"],
+          answer: 1,
+          hint: "The distance is about 150 million kilometers, and light travels very fast.",
+          explain:
+            "Sunlight takes about 8 minutes and 20 seconds to reach Earth.",
+        },
+        {
+          type: "Estimation",
+          icon: "≈",
+          q: "A standard 500 mL bottle holds about how many liters?",
+          visual: null,
+          choices: ["0.05 L", "0.5 L", "5 L", "50 L"],
+          answer: 1,
+          hint: "There are 1,000 milliliters in a liter.",
+          explain: "500 mL is half of 1,000 mL, or 0.5 liters.",
+        },
+        {
+          type: "Estimation",
+          icon: "≈",
+          q: "A movie lasts 2 hours. About how many seconds is that?",
+          visual: null,
+          choices: ["720", "3,600", "7,200", "72,000"],
+          answer: 2,
+          hint: "Convert hours to minutes, then minutes to seconds.",
+          explain: "2 × 60 × 60 = 7,200 seconds.",
+        },
+        {
+          type: "Estimation",
+          icon: "≈",
+          q: "Earth’s circumference is about 40,000 km. About how far is one quarter of the way around?",
+          visual: null,
+          choices: ["1,000 km", "4,000 km", "10,000 km", "20,000 km"],
+          answer: 2,
+          hint: "Divide 40,000 by four.",
+          explain: "One quarter of 40,000 km is about 10,000 km.",
+        },
+        {
+          type: "Estimation",
+          icon: "≈",
+          q: "A room is 4 m long and 3 m wide. What is its floor area?",
+          visual: null,
+          choices: ["7 m²", "12 m²", "14 m²", "24 m²"],
+          answer: 1,
+          hint: "For a rectangular floor, multiply length by width.",
+          explain: "4 × 3 = 12 square meters.",
+        },
+      ];
+      const gameEverydayPhysics = [
+        {
+          type: "Physics",
+          icon: "↗",
+          q: "Why does a passenger lean forward when a moving bus stops suddenly?",
+          visual: null,
+          choices: [
+            "Their body keeps moving forward",
+            "Gravity pulls them forward",
+            "The bus pushes them forward",
+            "Air pressure changes",
+          ],
+          answer: 0,
+          hint: "An object in motion tends to keep moving unless a force changes it.",
+          explain:
+            "Inertia keeps the passenger’s body moving forward while the bus slows down.",
+        },
+        {
+          type: "Physics",
+          icon: "↗",
+          q: "Which is easier for lifting a heavy box: a short steep ramp or a longer gentle ramp?",
+          visual: null,
+          choices: [
+            "The short steep ramp",
+            "The longer gentle ramp",
+            "They always take equal effort",
+            "Neither can help",
+          ],
+          answer: 1,
+          hint: "A ramp trades a longer distance for less force at each moment.",
+          explain:
+            "The longer gentle ramp reduces the force needed, though you push the box over a greater distance.",
+        },
+        {
+          type: "Physics",
+          icon: "↗",
+          q: "Why does a metal spoon feel colder than a wooden spoon in the same room?",
+          visual: null,
+          choices: [
+            "Metal is at a lower temperature",
+            "Metal draws heat from your hand faster",
+            "Wood creates heat",
+            "Metal contains cold",
+          ],
+          answer: 1,
+          hint: "Both spoons have been in the same room. Think about how quickly heat moves.",
+          explain:
+            "Metal conducts heat away from your skin faster than wood, so it feels colder even at the same temperature.",
+        },
+        {
+          type: "Physics",
+          icon: "↗",
+          q: "An ice cube floats in a glass of water. As it melts, what happens to the water level?",
+          visual: null,
+          choices: [
+            "It rises a lot",
+            "It falls a lot",
+            "It stays about the same",
+            "The glass overflows",
+          ],
+          answer: 2,
+          hint: "Floating ice already pushes aside an amount of water equal to its weight.",
+          explain:
+            "When floating ice melts, it becomes roughly the same volume of water as the water it displaced, so the level stays about the same.",
+        },
+        {
+          type: "Physics",
+          icon: "↗",
+          q: "Why does a straw look bent where it enters a glass of water?",
+          visual: null,
+          choices: [
+            "The water bends the straw",
+            "Light changes direction between water and air",
+            "The glass magnifies the straw",
+            "The straw gets shorter underwater",
+          ],
+          answer: 1,
+          hint: "The straw is straight, but light travels through both water and air to your eyes.",
+          explain:
+            "Refraction changes the direction of light as it passes between water and air, making the straw appear bent.",
+        },
+        {
+          type: "Physics",
+          icon: "↗",
+          q: "Which gives a door more turning effect: pushing near the hinge or near the handle?",
+          visual: null,
+          choices: [
+            "Near the hinge",
+            "Near the handle",
+            "Same either way",
+            "Only pushing upward works",
+          ],
+          answer: 1,
+          hint: "A force has more turning effect when applied farther from the pivot.",
+          explain:
+            "The handle is farther from the hinge, so the same push creates more turning effect.",
+        },
+        {
+          type: "Physics",
+          icon: "↗",
+          q: "Why do we see lightning before we hear thunder?",
+          visual: null,
+          choices: [
+            "Light travels faster than sound",
+            "Thunder happens later",
+            "Clouds block sound first",
+            "Lightning is closer",
+          ],
+          answer: 0,
+          hint: "Both happen at nearly the same time, but one travels much faster.",
+          explain:
+            "Light reaches us far faster than sound, so the flash arrives before the thunderclap.",
+        },
+        {
+          type: "Physics",
+          icon: "↗",
+          q: "A sealed empty plastic bottle is pushed underwater and released. What tends to happen?",
+          visual: null,
+          choices: [
+            "It sinks to the bottom",
+            "It rises toward the surface",
+            "It stays where released",
+            "It dissolves",
+          ],
+          answer: 1,
+          hint: "The bottle contains air and displaces water.",
+          explain:
+            "The bottle’s average density is lower than water, so buoyancy pushes it back toward the surface.",
+        },
+      ];
+      const gameAnimated = [
+        {
+          type: "Motion",
+          icon: "↝",
+          motion: "pendulum",
+          q: "Watch the pendulum swing. At its far-left turning point, which way will it move next?",
+          choices: [
+            "Further left",
+            "Back to the right",
+            "Straight upward",
+            "It stays there",
+          ],
+          answer: 1,
+          hint: "At the turning point it reverses direction.",
+          explain:
+            "The pendulum slows at the far-left point, then swings back toward the right.",
+        },
+        {
+          type: "Motion",
+          icon: "↝",
+          motion: "gears",
+          q: "Two gears are meshed. If the larger gear turns clockwise, which way does the smaller gear turn?",
+          choices: [
+            "Clockwise",
+            "Counterclockwise",
+            "It does not turn",
+            "It turns both ways",
+          ],
+          answer: 1,
+          hint: "Meshed gear teeth push against each other where they meet.",
+          explain:
+            "The touching teeth move in opposite directions, so meshed gears rotate in opposite directions.",
+        },
+        {
+          type: "Motion",
+          icon: "↝",
+          motion: "race",
+          q: "Two identical balls roll down the same smooth ramp. Which reaches the bottom first?",
+          choices: [
+            "The ball starting at the top",
+            "The ball starting halfway down",
+            "They tie",
+            "The lower ball stops",
+          ],
+          answer: 1,
+          hint: "Both balls accelerate down the ramp, but one has less track left.",
+          explain:
+            "The halfway ball has a shorter distance remaining and reaches the bottom first.",
+        },
+        {
+          type: "Motion",
+          icon: "↝",
+          motion: "orbit",
+          q: "A dot moves clockwise around the center. It is at the top now. Where will it be after a quarter turn?",
+          choices: [
+            "At the left",
+            "At the right",
+            "At the bottom",
+            "Still at the top",
+          ],
+          answer: 1,
+          hint: "Follow the orbit clockwise from the 12 o’clock position.",
+          explain:
+            "A clockwise quarter turn moves the dot from the top to the right side.",
+        },
+        {
+          type: "Motion",
+          icon: "↝",
+          motion: "bounce",
+          q: "At the very top of each bounce, what is the ball’s vertical speed for an instant?",
+          choices: [
+            "At its greatest",
+            "Zero",
+            "The same as the floor",
+            "It cannot be measured",
+          ],
+          answer: 1,
+          hint: "At the highest point, the ball changes from rising to falling.",
+          explain:
+            "For an instant at the top, the ball’s vertical motion pauses before it starts falling.",
+        },
+        {
+          type: "Motion",
+          icon: "↝",
+          motion: "spinner",
+          q: "The arrow turns clockwise by one quarter-turn. Where does its point end up?",
+          visual: ["↑", "↻"],
+          choices: ["Left", "Right", "Down", "Up"],
+          answer: 1,
+          hint: "A quarter-turn is 90 degrees clockwise.",
+          explain:
+            "A clockwise quarter-turn takes an upward-pointing arrow to the right.",
+        },
+        {
+          type: "Motion",
+          icon: "↝",
+          motion: "wave",
+          q: "The moving dots rise and fall one after another. Which dot starts moving after the fifth dot?",
+          choices: [
+            "The first dot",
+            "The second dot",
+            "The third dot",
+            "They all start together",
+          ],
+          answer: 0,
+          hint: "The sequence loops back to its beginning after the last dot.",
+          explain:
+            "The wave travels along the row and repeats, so the first dot follows the fifth.",
+        },
+        {
+          type: "Motion",
+          icon: "↝",
+          motion: "signals",
+          q: "The three lights flash in a repeating order: green, amber, red. Which light comes after red?",
+          choices: ["Green", "Amber", "Red", "All three"],
+          answer: 0,
+          hint: "The pattern loops back to its first light.",
+          explain: "After red, the repeating signal sequence returns to green.",
+        },
+      ];
+      const gameSound = [
+        {
+          type: "Sound",
+          icon: "♫",
+          sound: [440, 660, 440, 660],
+          q: "Listen to the tones. What pitch should come next in the pattern?",
+          choices: ["Low", "High", "A chord", "Silence"],
+          answer: 0,
+          hint: "The tones alternate low, high, low, high.",
+          explain:
+            "The pattern alternates low and high, so the next tone is low.",
+        },
+        {
+          type: "Sound",
+          icon: "♫",
+          sound: [440, 523, 659],
+          q: "The tones are stepping upward. Which pitch would continue the scale?",
+          choices: [
+            "Lower than the first",
+            "Between the second and third",
+            "Higher than the third",
+            "Exactly the first pitch",
+          ],
+          answer: 2,
+          hint: "Each tone is higher than the one before it.",
+          explain:
+            "The pattern rises each time, so the next tone should be higher than the third.",
+        },
+        {
+          type: "Sound",
+          icon: "♫",
+          sound: [440, 440, 660, 440, 440, 660],
+          q: "Which tone group repeats in the sound clue?",
+          choices: [
+            "Two low, one high",
+            "One low, two high",
+            "Three low",
+            "One high, one low",
+          ],
+          answer: 0,
+          hint: "Listen for the short group that repeats twice.",
+          explain:
+            "The repeated group is two low tones followed by one high tone.",
+        },
+        {
+          type: "Sound",
+          icon: "♫",
+          sound: [660, 660, 440, 660, 660, 440],
+          q: "Which group repeats?",
+          choices: [
+            "Two high, one low",
+            "Two low, one high",
+            "One high, one low",
+            "Three high",
+          ],
+          answer: 0,
+          hint: "The high tones come in a pair before the low tone.",
+          explain:
+            "The sound repeats as two high tones followed by one low tone.",
+        },
+        {
+          type: "Sound",
+          icon: "♫",
+          sound: [520, 0, 520, 520, 0, 520],
+          q: "What rhythm do you hear?",
+          choices: [
+            "Beep, rest, two beeps",
+            "Two beeps, rest, one beep",
+            "Three even beeps",
+            "One beep, long rest",
+          ],
+          answer: 0,
+          hint: "A zero in the sound clue is a silent beat.",
+          explain:
+            "The pattern is one beep, one silent beat, then two beeps; it repeats.",
+        },
+        {
+          type: "Sound",
+          icon: "♫",
+          sound: [390, 520, 650, 520],
+          q: "Which tone is the highest in the sequence?",
+          choices: ["First", "Second", "Third", "Fourth"],
+          answer: 2,
+          hint: "Compare the pitch of each note; higher pitch sounds sharper.",
+          explain:
+            "The third tone is the highest, then the sequence steps back down.",
+        },
+        {
+          type: "Sound",
+          icon: "♫",
+          sound: [440, 0, 0, 440, 0, 0],
+          q: "How many silent beats separate each pair of beeps?",
+          choices: ["None", "One", "Two", "Three"],
+          answer: 2,
+          hint: "Count the empty beats between the matching tones.",
+          explain: "There are two silent beats between the beeps.",
+        },
+        {
+          type: "Sound",
+          icon: "♫",
+          sound: [300, 600, 300, 600],
+          q: "The sound alternates between two pitches. Which pitch comes after the final high tone?",
+          choices: [
+            "The lower pitch",
+            "The higher pitch",
+            "Both together",
+            "No tone",
+          ],
+          answer: 0,
+          hint: "The pattern switches between low and high.",
+          explain:
+            "After a high tone, the alternating pattern returns to the lower pitch.",
+        },
+      ];
+      const gameCodes = [
+        {
+          type: "Code",
+          icon: "⌗",
+          q: "In this code, every letter shifts one place forward in the alphabet. What does DBU decode to?",
+          visual: null,
+          choices: ["CAT", "BAT", "CUT", "DOG"],
+          answer: 0,
+          hint: "To decode, move each coded letter one place backward.",
+          explain: "D shifts back to C, B to A, and U to T: CAT.",
+        },
+        {
+          type: "Code",
+          icon: "⌗",
+          q: "If A=1, B=2, C=3 and so on, what word is 3-1-20?",
+          visual: null,
+          choices: ["ACT", "CAT", "CAP", "CAN"],
+          answer: 1,
+          hint: "Turn each number into its matching alphabet letter.",
+          explain: "3 is C, 1 is A and 20 is T, spelling CAT.",
+        },
+        {
+          type: "Code",
+          icon: "⌗",
+          q: "A message reverses its letters. How would STAR be written?",
+          visual: null,
+          choices: ["RATS", "TSAR", "SATR", "ARTS"],
+          answer: 0,
+          hint: "Read the word from right to left.",
+          explain: "Reversing STAR gives RATS.",
+        },
+        {
+          type: "Code",
+          icon: "⌗",
+          q: "Using the reverse alphabet code A↔Z, B↔Y, C↔X, how is CAB encoded?",
+          visual: null,
+          choices: ["XZY", "XZA", "CZY", "XAY"],
+          answer: 0,
+          hint: "C maps to X, A maps to Z and B maps to Y.",
+          explain: "C becomes X, A becomes Z and B becomes Y: XZY.",
+        },
+        {
+          type: "Code",
+          icon: "⌗",
+          q: "A number lock code is 2, 4, 6, 8, __. What comes next?",
+          visual: ["2", "4", "6", "8", "?"],
+          choices: ["9", "10", "11", "12"],
+          answer: 1,
+          hint: "The code increases by the same amount each time.",
+          explain: "The code counts by twos, so the next number is 10.",
+        },
+        {
+          type: "Code",
+          icon: "⌗",
+          q: "Each symbol stands for a number: ★=2 and ●=5. What is ★ + ● + ★?",
+          visual: null,
+          choices: ["7", "8", "9", "10"],
+          answer: 2,
+          hint: "Replace each symbol with its value, then add.",
+          explain: "2 + 5 + 2 = 9.",
+        },
+        {
+          type: "Code",
+          icon: "⌗",
+          q: "In a code, SUN becomes TVO by shifting each letter forward once. What does MOON become?",
+          visual: null,
+          choices: ["NPPO", "NPPM", "LNNM", "NQPO"],
+          answer: 0,
+          hint: "Move M, O, O and N forward one alphabet letter each.",
+          explain: "M→N, O→P, O→P and N→O, giving NPPO.",
+        },
+        {
+          type: "Code",
+          icon: "⌗",
+          q: "A code replaces each vowel with the next vowel in the cycle A-E-I-O-U-A. What does MATE become?",
+          visual: null,
+          choices: ["METI", "MITE", "MATE", "MOTI"],
+          answer: 0,
+          hint: "Only change the vowels; consonants stay the same.",
+          explain: "A becomes E and E becomes I, so MATE becomes METI.",
+        },
+      ];
+      const gamePerspective = [
+        {
+          type: "Perspective",
+          icon: "◫",
+          q: "You face a mirror and raise your right hand. Which hand appears raised in the reflection?",
+          choices: [
+            "The reflection’s right hand",
+            "The reflection’s left hand",
+            "Both hands",
+            "Neither hand",
+          ],
+          answer: 1,
+          hint: "A mirror reverses the direction across its surface.",
+          explain: "The reflection appears to raise its left hand.",
+        },
+        {
+          type: "Perspective",
+          icon: "◫",
+          q: "Looking straight down at a cone from above, what outline do you see?",
+          visual: null,
+          choices: ["A circle", "A triangle", "A rectangle", "A star"],
+          answer: 0,
+          hint: "From above, the round base forms the visible outline.",
+          explain: "From directly above, the cone’s outline is circular.",
+        },
+        {
+          type: "Perspective",
+          icon: "◫",
+          q: "A cube has a blue face on top. You look at it from directly below. Which face do you see?",
+          choices: [
+            "The blue top face",
+            "The bottom face",
+            "The left face",
+            "No face",
+          ],
+          answer: 1,
+          hint: "From underneath, you see the face opposite the top.",
+          explain: "Looking from below shows the cube’s bottom face.",
+        },
+        {
+          type: "Perspective",
+          icon: "◫",
+          q: "You hold your thumb at arm’s length. Why can it appear to cover a distant building?",
+          choices: [
+            "Your thumb is much closer to your eye",
+            "The building becomes smaller",
+            "Your thumb grows larger",
+            "The building is behind your head",
+          ],
+          answer: 0,
+          hint: "Apparent size depends on both an object’s size and its distance from you.",
+          explain:
+            "A nearby thumb can take up a large angle in your view and cover the much larger but distant building.",
+        },
+        {
+          type: "Perspective",
+          icon: "◫",
+          q: "A road is drawn with its two edges meeting at a distant point. What does that point represent?",
+          choices: [
+            "The vanishing point",
+            "The road’s midpoint",
+            "A shadow",
+            "A horizon line only",
+          ],
+          answer: 0,
+          hint: "Parallel lines seem to meet as they recede into the distance.",
+          explain:
+            "The vanishing point is where parallel edges appear to converge in perspective.",
+        },
+        {
+          type: "Perspective",
+          icon: "◫",
+          q: "You walk around a stationary chair from its front to its side. What changes?",
+          choices: [
+            "The chair itself changes shape",
+            "Which parts of it you can see",
+            "Its actual size",
+            "Its color",
+          ],
+          answer: 1,
+          hint: "Your position changes, but the chair stays still.",
+          explain:
+            "A new viewpoint reveals different visible sides and hides others.",
+        },
+        {
+          type: "Perspective",
+          icon: "◫",
+          q: "A coin lies flat on a table. From a low side view, its outline looks most like what?",
+          choices: [
+            "A thin oval",
+            "A perfect circle",
+            "A square",
+            "A triangle",
+          ],
+          answer: 0,
+          hint: "A flat circle viewed at a shallow angle looks compressed.",
+          explain:
+            "From the side, the circle appears as a narrow oval or line.",
+        },
+        {
+          type: "Perspective",
+          icon: "◫",
+          q: "On a sunny day, the shadow of a vertical stick is shortest when the Sun is…",
+          choices: [
+            "Low near the horizon",
+            "High overhead",
+            "Behind a cloud",
+            "At the same angle all day",
+          ],
+          answer: 1,
+          hint: "A high light source makes a short shadow.",
+          explain:
+            "When the Sun is high overhead, the stick’s shadow is shortest.",
+        },
+      ];
+      const gameBalance = [
+        {
+          type: "Balance",
+          icon: "⚖",
+          q: "A balanced scale has two identical bags on one side and 6 kg on the other. How much does one bag weigh?",
+          visual: null,
+          choices: ["2 kg", "3 kg", "4 kg", "6 kg"],
+          answer: 1,
+          hint: "Split the 6 kg equally between the two matching bags.",
+          explain: "Two equal bags weigh 6 kg together, so each weighs 3 kg.",
+        },
+        {
+          type: "Balance",
+          icon: "⚖",
+          q: "A 2 kg weight sits 1 meter left of a pivot. What equal weight balances it 1 meter to the right?",
+          choices: ["1 kg", "2 kg", "4 kg", "It cannot balance"],
+          answer: 1,
+          hint: "Equal weights at equal distances create equal turning effects.",
+          explain:
+            "A 2 kg weight at the same distance balances another 2 kg weight.",
+        },
+        {
+          type: "Balance",
+          icon: "⚖",
+          q: "A 4 kg weight is 1 meter from the pivot. What weight at 2 meters balances it?",
+          choices: ["1 kg", "2 kg", "4 kg", "8 kg"],
+          answer: 1,
+          hint: "The farther weight needs less mass. Match weight × distance on each side.",
+          explain:
+            "4 × 1 = 2 × 2, so 2 kg at 2 meters balances 4 kg at 1 meter.",
+        },
+        {
+          type: "Balance",
+          icon: "⚖",
+          q: "A box plus a 2 kg weight balances 7 kg. How heavy is the box?",
+          choices: ["3 kg", "4 kg", "5 kg", "9 kg"],
+          answer: 2,
+          hint: "Take away the 2 kg from both sides of the balance.",
+          explain: "7 kg minus 2 kg leaves 5 kg for the box.",
+        },
+        {
+          type: "Balance",
+          icon: "⚖",
+          q: "Three identical blocks balance 12 kg. What is the weight of one block?",
+          choices: ["3 kg", "4 kg", "6 kg", "9 kg"],
+          answer: 1,
+          hint: "Divide the total weight into three equal parts.",
+          explain: "12 ÷ 3 = 4 kg per block.",
+        },
+        {
+          type: "Balance",
+          icon: "⚖",
+          q: "A 3 kg weight is 2 meters left of a pivot. What balances it 1 meter right?",
+          choices: ["3 kg", "4 kg", "6 kg", "9 kg"],
+          answer: 2,
+          hint: "Match the turning effects: mass × distance.",
+          explain: "3 × 2 = 6, so 6 kg at 1 meter balances it.",
+        },
+        {
+          type: "Balance",
+          icon: "⚖",
+          q: "A 5 kg weight sits 2 meters from the pivot. Which placement balances it?",
+          choices: [
+            "2 kg at 5 m",
+            "5 kg at 1 m",
+            "10 kg at 1 m",
+            "4 kg at 2 m",
+          ],
+          answer: 2,
+          hint: "The left turning effect is 5 × 2.",
+          explain:
+            "The left side has a turning effect of 10 kg·m. Ten kilograms at 1 meter matches it.",
+        },
+        {
+          type: "Balance",
+          icon: "⚖",
+          q: "A balanced seesaw has equal weights on both sides. One child moves farther from the center. What happens?",
+          choices: [
+            "That side tips down",
+            "That side rises",
+            "It stays balanced",
+            "Both sides rise",
+          ],
+          answer: 0,
+          hint: "Moving farther from the pivot increases turning effect.",
+          explain:
+            "The child farther from the center creates a larger turning effect, so that side tips down.",
+        },
+      ];
+      const gameProbability = [
+        {
+          type: "Probability",
+          icon: "◷",
+          q: "A fair coin is flipped once. What is the chance of heads?",
+          choices: ["1 in 4", "1 in 3", "1 in 2", "Certain"],
+          answer: 2,
+          hint: "There are two equally likely sides.",
+          explain:
+            "One of the coin’s two equally likely sides is heads, so the chance is 1 in 2.",
+        },
+        {
+          type: "Probability",
+          icon: "◷",
+          q: "A bag has 3 red counters and 1 blue counter. Which color is more likely to be drawn?",
+          choices: ["Red", "Blue", "They are equally likely", "Neither"],
+          answer: 0,
+          hint: "Compare how many counters there are of each color.",
+          explain:
+            "There are three red counters for every one blue counter, so red is more likely.",
+        },
+        {
+          type: "Probability",
+          icon: "◷",
+          q: "Roll one fair six-sided die. What is the chance of rolling a number greater than 4?",
+          choices: ["1 in 6", "2 in 6", "3 in 6", "4 in 6"],
+          answer: 1,
+          hint: "The winning faces are 5 and 6.",
+          explain:
+            "Two of the six faces are greater than 4, so the chance is 2 in 6, or 1 in 3.",
+        },
+        {
+          type: "Probability",
+          icon: "◷",
+          q: "A spinner has 4 equal sections: 2 green, 1 yellow and 1 red. What is the chance of green?",
+          choices: ["1 in 4", "1 in 3", "1 in 2", "3 in 4"],
+          answer: 2,
+          hint: "Two of the four equal sections are green.",
+          explain: "Green covers 2 of 4 equal sections, which is one half.",
+        },
+        {
+          type: "Probability",
+          icon: "◷",
+          q: "A box has 2 apple sweets and 2 lemon sweets. You pick one without looking. What is the chance it is lemon?",
+          choices: ["1 in 4", "1 in 3", "1 in 2", "Certain"],
+          answer: 2,
+          hint: "Half of the sweets are lemon.",
+          explain: "Two of four sweets are lemon, so the chance is 1 in 2.",
+        },
+        {
+          type: "Probability",
+          icon: "◷",
+          q: "Which sum is most likely when rolling two fair dice?",
+          choices: ["2", "5", "7", "12"],
+          answer: 2,
+          hint: "Count how many different dice pairs can make each sum.",
+          explain: "Seven can be made in six ways, more than any other sum.",
+        },
+        {
+          type: "Probability",
+          icon: "◷",
+          q: "A jar has 5 green marbles and no other colors. What is the chance of drawing a green marble?",
+          choices: ["0", "1 in 5", "1 in 2", "Certain"],
+          answer: 3,
+          hint: "Every marble in the jar is green.",
+          explain: "Because all marbles are green, drawing green is certain.",
+        },
+        {
+          type: "Probability",
+          icon: "◷",
+          q: "A card is drawn from a standard deck. Is drawing a heart more likely than drawing an ace?",
+          choices: [
+            "Heart is more likely",
+            "Ace is more likely",
+            "They are equally likely",
+            "Neither can happen",
+          ],
+          answer: 0,
+          hint: "There are 13 hearts and 4 aces in the deck.",
+          explain:
+            "There are 13 hearts but only 4 aces, so drawing a heart is more likely.",
+        },
+      ];
+      const gameWordLadder = [
+        {
+          type: "Word Ladder",
+          icon: "↕",
+          q: "Change one letter at a time to go from CAT to DOG. The ladder starts CAT → COT → DOT → … What word finishes it?",
+          visual: ["CAT", "COT", "DOT", "?"],
+          choices: ["DOG", "DIG", "LOG", "DUG"],
+          answer: 0,
+          hint: "Change the last letter of DOT to reach the target word.",
+          explain: "DOT becomes DOG by changing only the final letter.",
+        },
+        {
+          type: "Word Ladder",
+          icon: "↕",
+          q: "Continue the ladder toward WARM: COLD → CORD → CARD → WARD → …",
+          visual: null,
+          choices: ["WARM", "WORM", "WARS", "WARD"],
+          answer: 0,
+          hint: "Change one letter in WARD to get the target.",
+          explain: "WARD becomes WARM by changing D to M.",
+        },
+        {
+          type: "Word Ladder",
+          icon: "↕",
+          q: "Which word is one letter away from HAT and begins the ladder toward DOG?",
+          choices: ["CAT", "HUTS", "HOTEL", "HATS"],
+          answer: 0,
+          hint: "The next word should be three letters and differ in one position.",
+          explain:
+            "CAT differs from HAT only in the first letter and begins the path CAT → COT → DOT → DOG.",
+        },
+        {
+          type: "Word Ladder",
+          icon: "↕",
+          q: "Change one letter in COLD to make the name of a valuable metal.",
+          choices: ["GOLD", "CORD", "BOLD", "TOLD"],
+          answer: 0,
+          hint: "Change the first letter and keep the other three in place.",
+          explain:
+            "COLD becomes GOLD by changing C to G; gold is a valuable metal.",
+        },
+        {
+          type: "Word Ladder",
+          icon: "↕",
+          q: "In a word ladder, how many letters may change in each step?",
+          choices: ["One", "Two", "Any number", "No letters"],
+          answer: 0,
+          hint: "The challenge is to transform a word gradually.",
+          explain:
+            "A word ladder changes exactly one letter at each step, keeping the same word length.",
+        },
+        {
+          type: "Word Ladder",
+          icon: "↕",
+          q: "Which is a valid one-letter step from BOOK toward COOK?",
+          choices: ["LOOK", "BACK", "BOOT", "BARK"],
+          answer: 0,
+          hint: "Compare each choice with BOOK and count changed letters.",
+          explain:
+            "LOOK differs from BOOK only in the first letter, and COOK can follow from LOOK by changing L to C.",
+        },
+        {
+          type: "Word Ladder",
+          icon: "↕",
+          q: "Complete the ladder: HIT → HOT → DOT → … → DOG.",
+          choices: ["LOT", "DIG", "LOG", "DUG"],
+          answer: 0,
+          hint: "Change the first letter of DOT, then check that the new word can lead to DOG.",
+          explain: "DOT → LOT → LOG → DOG changes one letter at each step.",
+        },
+        {
+          type: "Word Ladder",
+          icon: "↕",
+          q: "Which pair can be linked by changing just one letter?",
+          choices: [
+            "COT and CAT",
+            "BOOK and BACK",
+            "STAR and MOON",
+            "SHIP and STOP",
+          ],
+          answer: 0,
+          hint: "Compare each pair letter by letter.",
+          explain:
+            "COT and CAT differ in exactly one letter; the other pairs differ in more than one.",
+        },
+      ];
+      const newGames = [
+        gameMemory,
+        gameWordplay,
+        gameSpatial,
+        gameDeduction,
+        gameEstimation,
+        gameEverydayPhysics,
+        gameAnimated,
+        gameSound,
+        gameCodes,
+        gamePerspective,
+        gameBalance,
+        gameProbability,
+        gameWordLadder,
+      ];
+      const games = [gameOne, gameTwo, ...newGames],
+        gameNames = [
+          "Original",
+          "Challenge 2",
+          "Memory",
+          "Wordplay",
+          "Spatial",
+          "Deduction",
+          "Estimation",
+          "Everyday Physics",
+          "Animated puzzles",
+          "Sound",
+          "Code Breaking",
+          "Perspective",
+          "Balance",
+          "Probability",
+          "Word Ladders",
+        ];
+      let gameIndex = 8,
+        puzzles = games[8],
+        index = 0,
+        score = 0,
+        answered = false,
+        hintShown = false;
+      const colors = {
+          Patterns: "#edf5e9",
+          Shapes: "#f1eafa",
+          Logic: "#fbf0e7",
+          Physics: "#eaf1fb",
+        },
+        dots = {
+          Patterns: "#80b276",
+          Shapes: "#ac8de0",
+          Logic: "#e6a174",
+          Physics: "#779ed9",
+        };
+      const $ = (id) => document.getElementById(id);
+      function playSound(pattern) {
+        const Audio = window.AudioContext || window.webkitAudioContext;
+        if (!Audio) return;
+        const ctx = new Audio();
+        pattern.forEach((hz, i) => {
+          if (!hz) return;
+          const osc = ctx.createOscillator(),
+            gain = ctx.createGain(),
+            start = ctx.currentTime + i * 0.34;
+          osc.frequency.value = hz;
+          gain.gain.setValueAtTime(0.001, start);
+          gain.gain.exponentialRampToValueAtTime(0.12, start + 0.025);
+          gain.gain.exponentialRampToValueAtTime(0.001, start + 0.22);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(start);
+          osc.stop(start + 0.24);
+        });
+        setTimeout(() => ctx.close(), pattern.length * 340 + 200);
+      }
+      function motionArt(kind) {
+        const parts = {
+          pendulum: '<div class="motion-pendulum"><i></i></div>',
+          gears:
+            '<span class="motion-gear">⚙</span><span class="motion-gear second">⚙</span>',
+          race: '<div class="race-lanes"><div class="race-lane">TOP <i class="race-ball"></i></div><div class="race-lane">HALFWAY <i class="race-ball mid"></i></div></div>',
+          orbit:
+            '<div class="motion-orbit"><i></i></div><span class="motion-center">✦</span>',
+          bounce: '<div class="motion-bounce"><i></i></div>',
+          spinner: '<span class="motion-spinner">↑</span>',
+          wave: '<div class="motion-wave"><i></i><i></i><i></i><i></i><i></i></div>',
+          signals: '<div class="motion-signals"><i></i><i></i><i></i></div>',
+        };
+        return `<div class="motion-scene">${parts[kind] || ""}</div>`;
+      }
+      function render() {
+        document.querySelectorAll(".memory-note").forEach((n) => n.remove());
+        const p = puzzles[index];
+        answered = false;
+        hintShown = false;
+        $("category").innerHTML =
+          `<span style="color:${dots[p.type] || "#66746b"}">${p.icon}</span> ${p.type}`;
+        $("category").style.background = colors[p.type] || "#eef1ed";
+        $("question").textContent = p.q;
+        $("count").textContent =
+          `${String(index + 1).padStart(2, "0")} / ${puzzles.length}`;
+        $("progress").style.width = `${(index / puzzles.length) * 100}%`;
+        $("score").textContent = score;
+        $("feedback").className = "feedback";
+        $("feedback").textContent = "";
+        $("hint").className = "hint";
+        $("hint").textContent = "";
+        $("hintBtn").style.display = "";
+        $("nextBtn").textContent =
+          index === puzzles.length - 1 ? "Finish game  ↗" : "Next question  ↗";
+        $("visual").innerHTML = p.visual
+          ? `<div class="sequence">${p.visual.map((v, i) => `<span class="seq-cell ${i === p.visual.length - 1 ? "missing" : ""}">${v}</span>`).join("")}</div>`
+          : "";
+        if (p.motion) $("visual").innerHTML = motionArt(p.motion);
+        if (p.sound) {
+          $("visual").insertAdjacentHTML(
+            "beforeend",
+            '<button class="play-sound" id="playSound">▶ Play sound clue</button>',
+          );
+          $("playSound").onclick = () => playSound(p.sound);
+        }
+        $("choices").innerHTML = p.choices
+          .map(
+            (c, i) =>
+              `<button class="choice" data-i="${i}"><span class="letter">${String.fromCharCode(65 + i)}</span><span class="choice-text">${c}</span></button>`,
+          )
+          .join("");
+        document
+          .querySelectorAll(".choice")
+          .forEach((b) =>
+            b.addEventListener("click", () => pick(+b.dataset.i)),
+          );
+        $("gameTabs").innerHTML = gameNames
+          .map(
+            (name, i) =>
+              `<button class="game-tab ${i === gameIndex ? "active" : ""}" data-game="${i}">${name}</button>`,
+          )
+          .join("");
+        document
+          .querySelectorAll(".game-tab")
+          .forEach((b) => (b.onclick = () => switchGame(+b.dataset.game)));
+        if (p.memory) {
+          $("visual").insertAdjacentHTML(
+            "afterend",
+            '<div class="memory-note" id="memoryNote">Take a good look…</div>',
+          );
+          const shownGame = gameIndex,
+            shownIndex = index;
+          setTimeout(() => {
+            if (gameIndex === shownGame && index === shownIndex && !answered) {
+              $("visual").innerHTML = "";
+              const note = $("memoryNote");
+              if (note)
+                note.textContent = "Sequence hidden · what do you remember?";
+            }
+          }, 2800);
+        }
+      }
+      function pick(n) {
+        if (answered) return;
+        answered = true;
+        const p = puzzles[index],
+          buttons = [...document.querySelectorAll(".choice")];
+        buttons.forEach((b, i) => {
+          b.disabled = true;
+          if (i === p.answer) b.classList.add("correct");
+          if (i === n && n !== p.answer) b.classList.add("wrong");
+        });
+        if (n === p.answer) score++;
+        $("score").textContent = score;
+        $("feedback").textContent =
+          (n === p.answer ? "That’s it. " : "Not quite. ") + p.explain;
+        $("feedback").classList.add("show");
+        $("hintBtn").style.display = "none";
+        $("progress").style.width = `${((index + 1) / puzzles.length) * 100}%`;
+      }
+      $("hintBtn").onclick = () => {
+        if (hintShown) return;
+        hintShown = true;
+        $("hint").textContent = "Hint: " + puzzles[index].hint;
+        $("hint").classList.add("show");
+      };
+      $("nextBtn").onclick = () => {
+        if (index < puzzles.length - 1) {
+          index++;
+          render();
+        } else finish();
+      };
+      function switchGame(n) {
+        gameIndex = n;
+        puzzles = games[n];
+        index = 0;
+        score = 0;
+        $("result").classList.remove("show");
+        $("quiz").style.display = "";
+        render();
+      }
+      function finish() {
+        $("quiz").style.display = "none";
+        $("result").classList.add("show");
+        $("progress").style.width = "100%";
+        $("count").textContent = "COMPLETE";
+        $("resultTitle").textContent =
+          score >= 7
+            ? "Brilliantly done."
+            : score >= 4
+              ? "Good thinking."
+              : "A fine first round.";
+        $("resultText").textContent =
+          `You solved ${score} of ${puzzles.length} puzzles in ${gameNames[gameIndex]}. Every puzzle is a chance to notice something new.`;
+      }
+      $("restart").onclick = () => {
+        index = 0;
+        score = 0;
+        $("result").classList.remove("show");
+        $("quiz").style.display = "";
+        render();
+      };
+      render();
+    </script>
+  </body>
+</html>
