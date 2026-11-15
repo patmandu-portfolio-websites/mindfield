@@ -484,6 +484,123 @@
         color: white;
         border-color: var(--ink);
       }
+      .game-select {
+        max-width: 100%;
+        border: 1px solid #9ab999;
+        border-radius: 10px;
+        padding: 8px 26px 8px 13px;
+        background: #edf5e9;
+        color: #426b4d;
+        font: 600 12px "DM Sans", sans-serif;
+        cursor: pointer;
+      }
+      .game-select.active {
+        background: #d7edce;
+        border-color: #426b4d;
+        color: var(--ink);
+      }
+      .activity-intro {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.6;
+      }
+      .activity-status {
+        min-height: 24px;
+        color: var(--darkgreen);
+        font-weight: 600;
+        font-size: 14px;
+      }
+      .activity-button {
+        border: 0;
+        border-radius: 11px;
+        padding: 11px 16px;
+        background: var(--ink);
+        color: white;
+        font-weight: 600;
+        font-size: 13px;
+      }
+      .word-grid {
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+        gap: 4px;
+        width: min(100%, 400px);
+        margin: 20px 0;
+      }
+      .word-cell {
+        aspect-ratio: 1;
+        min-width: 0;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #f8f7f1;
+        font-weight: 700;
+      }
+      .word-cell.found {
+        background: #d7edce;
+        border-color: #9ac391;
+      }
+      .word-cell.selected {
+        outline: 3px solid var(--darkgreen);
+        outline-offset: -3px;
+      }
+      .word-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 16px;
+        padding: 0;
+        list-style: none;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .word-list .found {
+        color: var(--muted);
+        text-decoration: line-through;
+      }
+      .simon-board {
+        width: min(100%, 310px);
+        aspect-ratio: 1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        padding: 10px;
+        margin: 20px 0;
+        border-radius: 50%;
+        background: var(--ink);
+        position: relative;
+      }
+      .simon-pad {
+        border: 0;
+        opacity: 0.72;
+        color: #fff;
+        font-weight: 700;
+        text-shadow: 0 1px 3px #000;
+        transition: filter 0.1s, opacity 0.1s;
+      }
+      .simon-pad:disabled {
+        cursor: default;
+      }
+      .simon-pad.lit {
+        opacity: 1;
+        filter: brightness(1.5);
+      }
+      .simon-pad[data-pad="0"] { background: #21834a; border-radius: 100% 8px 8px 8px; }
+      .simon-pad[data-pad="1"] { background: #bd3939; border-radius: 8px 100% 8px 8px; }
+      .simon-pad[data-pad="2"] { background: #c28a12; border-radius: 8px 8px 8px 100%; }
+      .simon-pad[data-pad="3"] { background: #3166b8; border-radius: 8px 8px 100% 8px; }
+      .simon-start {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 76px;
+        height: 76px;
+        border: 7px solid var(--ink);
+        border-radius: 50%;
+        background: var(--green);
+        color: var(--ink);
+        font-weight: 700;
+        font-size: 12px;
+      }
+      .simon-start:disabled { cursor: default; opacity: 0.8; }
       .memory-note {
         text-align: center;
         color: var(--muted);
@@ -948,8 +1065,8 @@
           <div class="eyebrow">Curiosity, meet challenge&nbsp; · &nbsp;01</div>
           <h1>Give your brain<br /><span>some room to play.</span></h1>
           <p>
-            Eight playful puzzle packs for memory, words, shapes, deduction,
-            estimation and physics. Take your time. Stay curious.
+            Playful puzzles for memory, words, maths, shapes and more.
+            Take your time. Stay curious.
           </p>
         </div>
         <div class="hero-art"><div class="orbit"></div></div>
@@ -977,6 +1094,7 @@
               </button>
             </div>
           </div>
+          <div id="activity" hidden></div>
           <div class="result" id="result">
             <div class="result-symbol">✳</div>
             <h2 id="resultTitle">Nicely done.</h2>
@@ -988,22 +1106,21 @@
         </main>
         <aside class="side-card">
           <h2 class="side-title">The mix</h2>
-          <p class="side-sub">Eight puzzle packs. Pick one and play.</p>
+          <p class="side-sub">Pick a game and play.</p>
           <div class="stat">
             <span class="stat-name"
-              ><i class="dot" style="background: #80b276"></i>Original
-              games</span
-            ><span class="stat-val">16</span>
+              ><i class="dot" style="background: #80b276"></i>Quiz packs</span
+            ><span class="stat-val">44</span>
           </div>
           <div class="stat">
             <span class="stat-name"
-              ><i class="dot" style="background: #ac8de0"></i>New packs</span
-            ><span class="stat-val">48</span>
+              ><i class="dot" style="background: #ac8de0"></i>Interactive games</span
+            ><span class="stat-val">2</span>
           </div>
           <div class="score-box">
-            <div class="score-label">Puzzles solved</div>
+            <div class="score-label" id="scoreLabel">Puzzles solved</div>
             <div class="score-number">
-              <span id="score">0</span><small> / 8</small>
+              <span id="score">0</span><small id="scoreTotal"> / 8</small>
             </div>
           </div>
           <p class="side-foot">
@@ -1017,6 +1134,7 @@
         ><span>THINK PLAYFULLY&nbsp; ↗</span>
       </div>
     </div>
+    <script src="additional-games.js"></script>
     <script>
       const gameOne = [
         {
@@ -2521,6 +2639,16 @@
             "COT and CAT differ in exactly one letter; the other pairs differ in more than one.",
         },
       ];
+      const gameMath = [
+        { type: "Math", icon: "+", q: "What is 18 + 27?", choices: ["35", "45", "46", "55"], answer: 1, hint: "Add the tens, then the ones.", explain: "18 + 27 = 45." },
+        { type: "Math", icon: "−", q: "What is 72 − 38?", choices: ["34", "36", "44", "46"], answer: 0, hint: "Subtract 40, then add 2 back.", explain: "72 − 38 = 34." },
+        { type: "Math", icon: "×", q: "What is 7 × 8?", choices: ["48", "54", "56", "64"], answer: 2, hint: "Think of 7 groups of 8.", explain: "7 × 8 = 56." },
+        { type: "Math", icon: "÷", q: "What is 81 ÷ 9?", choices: ["7", "8", "9", "10"], answer: 2, hint: "Which number multiplied by 9 makes 81?", explain: "81 ÷ 9 = 9." },
+        { type: "Math", icon: "%", q: "What is 25% of 80?", choices: ["15", "20", "25", "40"], answer: 1, hint: "25% is one quarter.", explain: "One quarter of 80 is 20." },
+        { type: "Math", icon: "½", q: "What is ½ + ¼?", choices: ["⅓", "½", "¾", "1"], answer: 2, hint: "Express both fractions in quarters.", explain: "½ is 2 quarters, so the sum is ¾." },
+        { type: "Math", icon: "◌", q: "What number comes next: 5, 10, 20, 40?", choices: ["45", "60", "75", "80"], answer: 3, hint: "Each number is twice the one before it.", explain: "40 doubled is 80." },
+        { type: "Math", icon: "□", q: "A rectangle is 6 cm long and 4 cm wide. What is its area?", choices: ["10 cm²", "20 cm²", "24 cm²", "28 cm²"], answer: 2, hint: "Multiply length by width.", explain: "6 × 4 = 24 square centimetres." },
+      ];
       const newGames = [
         gameMemory,
         gameWordplay,
@@ -2536,7 +2664,7 @@
         gameProbability,
         gameWordLadder,
       ];
-      const games = [gameOne, gameTwo, ...newGames],
+      const games = [gameOne, gameTwo, ...newGames, gameMath, null, null],
         gameNames = [
           "Original",
           "Challenge 2",
@@ -2553,13 +2681,18 @@
           "Balance",
           "Probability",
           "Word Ladders",
+          "Math",
+          "Word Search",
+          "Simon",
         ];
       let gameIndex = 8,
+        setIndex = 0,
         puzzles = games[8],
         index = 0,
         score = 0,
         answered = false,
-        hintShown = false;
+        hintShown = false,
+        memoryTimer;
       const colors = {
           Patterns: "#edf5e9",
           Shapes: "#f1eafa",
@@ -2573,6 +2706,46 @@
           Physics: "#779ed9",
         };
       const $ = (id) => document.getElementById(id);
+      const wordGameIndex = games.length - 2,
+        simonGameIndex = games.length - 1;
+      let activityTimers = [],
+        audioContext = null,
+        wordPuzzleIndex = 0;
+      function later(callback, delay) {
+        const timer = setTimeout(() => {
+          activityTimers = activityTimers.filter((item) => item !== timer);
+          callback();
+        }, delay);
+        activityTimers.push(timer);
+      }
+      function clearActivity() {
+        activityTimers.forEach(clearTimeout);
+        activityTimers = [];
+        if (audioContext) {
+          audioContext.close();
+          audioContext = null;
+        }
+      }
+      function renderTabs() {
+        $("gameTabs").innerHTML = gameNames
+          .map((name, i) => additionalGames[name]
+            ? `<select class="game-select ${i === gameIndex ? "active" : ""}" data-game="${i}" aria-label="${name} puzzle set">
+                <option value="" ${i !== gameIndex ? "selected" : ""} disabled>${name}</option>
+                ${[0, 1, 2].map((set) => `<option value="${set}" ${i === gameIndex && set === setIndex ? "selected" : ""}>${name} · Game ${set + 1}</option>`).join("")}
+              </select>`
+            : `<button class="game-tab ${i === gameIndex ? "active" : ""}" data-game="${i}" ${i === gameIndex ? 'aria-current="true"' : ""}>${name}</button>`)
+          .join("");
+        $("gameTabs").querySelectorAll(".game-tab").forEach((b) => {
+          b.onclick = () => switchGame(+b.dataset.game);
+        });
+        $("gameTabs").querySelectorAll(".game-select").forEach((select) => {
+          select.onchange = () => {
+            const selectedGame = +select.dataset.game;
+            switchGame(selectedGame, +select.value);
+            $("gameTabs").querySelector(`.game-select[data-game="${selectedGame}"]`).focus({ preventScroll: true });
+          };
+        });
+      }
       function playSound(pattern) {
         const Audio = window.AudioContext || window.webkitAudioContext;
         if (!Audio) return;
@@ -2609,6 +2782,7 @@
         return `<div class="motion-scene">${parts[kind] || ""}</div>`;
       }
       function render() {
+        clearTimeout(memoryTimer);
         document.querySelectorAll(".memory-note").forEach((n) => n.remove());
         const p = puzzles[index];
         answered = false;
@@ -2621,6 +2795,8 @@
           `${String(index + 1).padStart(2, "0")} / ${puzzles.length}`;
         $("progress").style.width = `${(index / puzzles.length) * 100}%`;
         $("score").textContent = score;
+        $("scoreLabel").textContent = "Puzzles solved";
+        $("scoreTotal").textContent = ` / ${puzzles.length}`;
         $("feedback").className = "feedback";
         $("feedback").textContent = "";
         $("hint").className = "hint";
@@ -2650,15 +2826,7 @@
           .forEach((b) =>
             b.addEventListener("click", () => pick(+b.dataset.i)),
           );
-        $("gameTabs").innerHTML = gameNames
-          .map(
-            (name, i) =>
-              `<button class="game-tab ${i === gameIndex ? "active" : ""}" data-game="${i}">${name}</button>`,
-          )
-          .join("");
-        document
-          .querySelectorAll(".game-tab")
-          .forEach((b) => (b.onclick = () => switchGame(+b.dataset.game)));
+        renderTabs();
         if (p.memory) {
           $("visual").insertAdjacentHTML(
             "afterend",
@@ -2666,7 +2834,7 @@
           );
           const shownGame = gameIndex,
             shownIndex = index;
-          setTimeout(() => {
+          memoryTimer = setTimeout(() => {
             if (gameIndex === shownGame && index === shownIndex && !answered) {
               $("visual").innerHTML = "";
               const note = $("memoryNote");
@@ -2706,14 +2874,240 @@
           render();
         } else finish();
       };
-      function switchGame(n) {
+      function switchGame(n, selectedSet = 0) {
+        clearActivity();
+        clearTimeout(memoryTimer);
         gameIndex = n;
-        puzzles = games[n];
+        setIndex = selectedSet;
+        puzzles = selectedSet === 0 ? games[n] : additionalGames[gameNames[n]][selectedSet - 1];
         index = 0;
         score = 0;
         $("result").classList.remove("show");
-        $("quiz").style.display = "";
-        render();
+        $("activity").hidden = n < wordGameIndex;
+        $("quiz").style.display = n < wordGameIndex ? "" : "none";
+        document.querySelectorAll(".memory-note").forEach((note) => note.remove());
+        if (n === wordGameIndex) renderWordSearch();
+        else if (n === simonGameIndex) renderSimon();
+        else render();
+        renderTabs();
+      }
+      const wordPuzzles = [
+        { theme: "In the garden", words: ["FLOWER", "LEAF", "BEE", "SEED", "ROOT"] },
+        { theme: "Night sky", words: ["PLANET", "STAR", "MOON", "COMET", "ORBIT"] },
+        { theme: "At the coast", words: ["OCEAN", "SHELL", "WAVE", "SAND", "CORAL"] },
+      ];
+      function makeWordGrid(words) {
+        const grid = Array(64).fill(""),
+          directions = [-1, 0, 1].flatMap((row) =>
+            [-1, 0, 1].filter((col) => row || col).map((col) => [row, col]),
+          );
+        function place(wordIndex) {
+          if (wordIndex === words.length) return true;
+          const word = words[wordIndex], candidates = [];
+          for (let row = 0; row < 8; row++) {
+            for (let col = 0; col < 8; col++) {
+              directions.forEach(([dr, dc]) => {
+                const endRow = row + dr * (word.length - 1),
+                  endCol = col + dc * (word.length - 1);
+                if (endRow < 0 || endRow > 7 || endCol < 0 || endCol > 7) return;
+                const cells = [...word].map((letter, i) => (row + dr * i) * 8 + col + dc * i);
+                if (cells.every((cell, i) => !grid[cell] || grid[cell] === word[i]))
+                  candidates.push(cells);
+              });
+            }
+          }
+          for (let i = candidates.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
+          }
+          for (const cells of candidates) {
+            const previous = cells.map((cell) => grid[cell]);
+            cells.forEach((cell, i) => { grid[cell] = word[i]; });
+            if (place(wordIndex + 1)) return true;
+            cells.forEach((cell, i) => { grid[cell] = previous[i]; });
+          }
+          return false;
+        }
+        if (!place(0)) throw new Error("Unable to create the word search.");
+        return grid.map((letter) => letter || String.fromCharCode(65 + Math.floor(Math.random() * 26)));
+      }
+      function renderWordSearch() {
+        const puzzle = wordPuzzles[wordPuzzleIndex],
+          grid = makeWordGrid(puzzle.words),
+          found = new Set(),
+          foundCells = new Set();
+        let start = null;
+        score = 0;
+        $("score").textContent = "0";
+        $("scoreLabel").textContent = "Words found";
+        $("scoreTotal").textContent = ` / ${puzzle.words.length}`;
+        $("activity").innerHTML = `
+          <div class="section-label">Word search · ${puzzle.theme}</div>
+          <h2 class="question">Find the hidden words.</h2>
+          <p class="activity-intro">Select the first and last letter of a word. Words can run in any direction, including backwards and diagonally.</p>
+          <div class="activity-status" id="wordStatus" role="status" aria-live="polite">Choose a starting letter.</div>
+          <div class="word-grid" id="wordGrid" role="group" aria-label="Word search grid"></div>
+          <ul class="word-list" id="wordList"></ul>
+          <button class="activity-button" id="nextWordPuzzle">New word search ↗</button>`;
+        const gridElement = $("wordGrid");
+        gridElement.innerHTML = grid.map((letter, i) =>
+          `<button class="word-cell" data-cell="${i}" aria-label="Row ${Math.floor(i / 8) + 1}, column ${i % 8 + 1}: ${letter}">${letter}</button>`,
+        ).join("");
+        function updateWords() {
+          $("wordList").innerHTML = puzzle.words.map((word) =>
+            `<li class="${found.has(word) ? "found" : ""}">${word}${found.has(word) ? " ✓" : ""}</li>`,
+          ).join("");
+        }
+        updateWords();
+        gridElement.addEventListener("click", (event) => {
+          const button = event.target.closest(".word-cell");
+          if (!button || found.size === puzzle.words.length) return;
+          const cell = Number(button.dataset.cell);
+          if (start === null) {
+            start = cell;
+            button.classList.add("selected");
+            $("wordStatus").textContent = "Now choose the last letter.";
+            return;
+          }
+          const startRow = Math.floor(start / 8), startCol = start % 8,
+            rowDiff = Math.floor(cell / 8) - startRow, colDiff = cell % 8 - startCol;
+          gridElement.children[start].classList.remove("selected");
+          if ((rowDiff === 0 && colDiff === 0) || (rowDiff && colDiff && Math.abs(rowDiff) !== Math.abs(colDiff))) {
+            start = null;
+            $("wordStatus").textContent = "Choose two different letters in a straight line.";
+            return;
+          }
+          const length = Math.max(Math.abs(rowDiff), Math.abs(colDiff)) + 1,
+            cells = Array.from({ length }, (_, i) =>
+              (startRow + Math.sign(rowDiff) * i) * 8 + startCol + Math.sign(colDiff) * i,
+            ),
+            selected = cells.map((i) => grid[i]).join(""),
+            word = puzzle.words.find((w) => w === selected || w === [...selected].reverse().join(""));
+          start = null;
+          if (!word) {
+            $("wordStatus").textContent = "Not a word on the list. Try again.";
+          } else if (found.has(word)) {
+            $("wordStatus").textContent = `${word} is already found.`;
+          } else {
+            found.add(word);
+            cells.forEach((i) => foundCells.add(i));
+            foundCells.forEach((i) => gridElement.children[i].classList.add("found"));
+            $("score").textContent = found.size;
+            updateWords();
+            $("wordStatus").textContent = found.size === puzzle.words.length
+              ? "All words found! Try another word search."
+              : `Found ${word}! Choose another starting letter.`;
+          }
+        });
+        $("nextWordPuzzle").onclick = () => {
+          wordPuzzleIndex = (wordPuzzleIndex + 1) % wordPuzzles.length;
+          renderWordSearch();
+        };
+      }
+      function renderSimon() {
+        const names = ["Green", "Red", "Yellow", "Blue"],
+          frequencies = [392, 330, 262, 196];
+        let sequence = [], position = 0, phase = "ready";
+        score = 0;
+        $("score").textContent = "0";
+        $("scoreLabel").textContent = "Rounds completed";
+        $("scoreTotal").textContent = "";
+        $("activity").innerHTML = `
+          <div class="section-label">Simon · memory</div>
+          <h2 class="question">Watch, listen, repeat.</h2>
+          <p class="activity-intro">Press the green start button, then repeat the lights and tones in order. Each round adds a new color and gets faster.</p>
+          <p class="activity-intro" id="simonAudioStatus" role="status"></p>
+          <div class="activity-status" id="simonStatus" role="status" aria-live="polite">Press start to play.</div>
+          <div class="simon-board" role="group" aria-label="Simon color pads">
+            ${names.map((name, i) => `<button class="simon-pad" data-pad="${i}" aria-label="${name}" disabled>${name}</button>`).join("")}
+            <button class="simon-start" id="simonStart" aria-label="Start Simon">Start</button>
+          </div>`;
+        const pads = [...document.querySelectorAll(".simon-pad")],
+          startButton = $("simonStart");
+        function setPadsEnabled(enabled) {
+          pads.forEach((pad) => { pad.disabled = !enabled; });
+        }
+        function tone(frequency, duration, type = "sine") {
+          if (!audioContext || audioContext.state !== "running") return;
+          const oscillator = audioContext.createOscillator(),
+            gain = audioContext.createGain(),
+            start = audioContext.currentTime;
+          oscillator.type = type;
+          oscillator.frequency.setValueAtTime(frequency, start);
+          gain.gain.setValueAtTime(0.001, start);
+          gain.gain.exponentialRampToValueAtTime(0.14, start + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+          oscillator.connect(gain);
+          gain.connect(audioContext.destination);
+          oscillator.start(start);
+          oscillator.stop(start + duration);
+        }
+        function flash(pad, duration) {
+          pads[pad].classList.add("lit");
+          tone(frequencies[pad], duration / 1000);
+          later(() => pads[pad].classList.remove("lit"), duration);
+        }
+        function nextRound() {
+          phase = "watch";
+          setPadsEnabled(false);
+          sequence.push(Math.floor(Math.random() * names.length));
+          position = 0;
+          $("simonStatus").textContent = `Round ${sequence.length}: watch and listen.`;
+          const duration = Math.max(180, 600 - (sequence.length - 1) * 30),
+            step = duration + 180;
+          sequence.forEach((pad, i) => later(() => flash(pad, duration), 500 + i * step));
+          later(() => {
+            phase = "input";
+            setPadsEnabled(true);
+            $("simonStatus").textContent = "Your turn: repeat the sequence.";
+          }, 500 + sequence.length * step);
+        }
+        startButton.onclick = () => {
+          if (phase !== "ready" && phase !== "over") return;
+          clearActivity();
+          const Audio = window.AudioContext || window.webkitAudioContext;
+          $("simonAudioStatus").textContent = "";
+          if (Audio) {
+            audioContext = new Audio();
+            const currentAudio = audioContext;
+            if (audioContext.state === "suspended") {
+              audioContext.resume().catch(() => {
+                if (audioContext === currentAudio)
+                  $("simonAudioStatus").textContent = "Audio could not start; you can still follow the lights.";
+              });
+            }
+          } else $("simonAudioStatus").textContent = "Audio is not supported in this browser; you can still follow the lights.";
+          sequence = [];
+          score = 0;
+          $("score").textContent = "0";
+          startButton.disabled = true;
+          startButton.textContent = "Playing";
+          nextRound();
+        };
+        pads.forEach((button, pad) => {
+          button.onclick = () => {
+            if (phase !== "input") return;
+            flash(pad, 180);
+            if (pad !== sequence[position]) {
+              phase = "over";
+              setPadsEnabled(false);
+              tone(110, 0.5, "sawtooth");
+              $("simonStatus").textContent = `Game over. You completed ${score} ${score === 1 ? "round" : "rounds"}. Press start to play again.`;
+              startButton.disabled = false;
+              startButton.textContent = "Start";
+              return;
+            }
+            position++;
+            if (position === sequence.length) {
+              score++;
+              $("score").textContent = score;
+              phase = "wait";
+              setPadsEnabled(false);
+              $("simonStatus").textContent = "Nice! Get ready for the next round.";
+              later(nextRound, 800);
+            }
+          };
+        });
       }
       function finish() {
         $("quiz").style.display = "none";
@@ -2727,7 +3121,7 @@
               ? "Good thinking."
               : "A fine first round.";
         $("resultText").textContent =
-          `You solved ${score} of ${puzzles.length} puzzles in ${gameNames[gameIndex]}. Every puzzle is a chance to notice something new.`;
+          `You solved ${score} of ${puzzles.length} puzzles in ${gameNames[gameIndex]}${additionalGames[gameNames[gameIndex]] ? ` · Game ${setIndex + 1}` : ""}. Every puzzle is a chance to notice something new.`;
       }
       $("restart").onclick = () => {
         index = 0;
