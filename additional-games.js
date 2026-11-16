@@ -252,22 +252,22 @@ const memoryQuestions = memorySequences.map((sequence, i) => {
 additionalGames.Memory = [memoryQuestions.slice(0, 8), memoryQuestions.slice(8)];
 
 const motionRows = [
-  ["pendulum", "At the far right of a pendulum's swing, which direction does it move next?", "Left", "Right", "Up forever", "It never moves again", "It reverses toward the left."],
-  ["pendulum", "Where is a pendulum bob highest during its swing?", "At either end", "At the center", "Below its lowest point", "At every point equally", "The ends of its arc are higher than its center."],
-  ["gears", "Two gears mesh. If the first turns counterclockwise, which way does the second turn?", "Clockwise", "Counterclockwise", "It cannot turn", "It changes direction continuously", "Meshing gears rotate in opposite directions."],
-  ["orbit", "A dot moves clockwise from the right side of a circle. Where is it after a quarter-turn?", "Bottom", "Top", "Left", "Right", "A clockwise quarter-turn from the right reaches the bottom."],
-  ["bounce", "As a ball rises after bouncing, what does gravity do to its upward speed?", "Reduces it", "Increases it", "Keeps it constant", "Makes it infinite", "Gravity accelerates the ball downward, slowing its rise."],
-  ["spinner", "An arrow pointing up turns clockwise through a half-turn. Where does it point?", "Down", "Right", "Left", "Up", "A half-turn reverses the arrow."],
-  ["wave", "A row of dots is animated in order, left to right. What follows the third dot?", "The fourth", "The first", "The second", "None", "The fourth dot follows the third in order."],
-  ["signals", "Three lights repeat green, yellow, red. What follows red?", "Green", "Yellow", "Red twice", "Blue", "The repeating sequence returns to green."],
-  ["pendulum", "When a pendulum passes its lowest point, is it higher or lower than at either end?", "Lower", "Higher", "The same height", "Outside its arc", "The bottom of the arc is lower than the ends."],
-  ["gears", "Three gears mesh in a row. If the first turns clockwise, which way does the third turn?", "Clockwise", "Counterclockwise", "It stays still", "Both ways at once", "Each meshing reverses direction, so two reversals restore it."],
-  ["orbit", "A dot moves clockwise from the bottom of a circle. Where is it after a quarter-turn?", "Left", "Right", "Top", "Bottom", "A clockwise quarter-turn from the bottom reaches the left."],
-  ["bounce", "What happens immediately after a bouncing ball reaches its highest point?", "It starts falling", "It keeps rising", "It stops forever", "It moves upward faster", "Gravity pulls it down after the turning point."],
-  ["spinner", "An upward arrow turns counterclockwise a quarter-turn. Where does it point?", "Left", "Right", "Down", "Up", "A counterclockwise quarter-turn from up points left."],
-  ["wave", "A repeating sequence lights dots 1, 2, 3, then starts again. Which follows 3?", "1", "2", "3", "4", "The sequence loops back to 1."],
-  ["signals", "Three lights repeat red, yellow, green. What follows yellow?", "Green", "Red", "Yellow", "Blue", "Green follows yellow in the stated sequence."],
-  ["orbit", "How many quarter-turns make one full orbit?", "4", "2", "3", "8", "Four quarter-turns make a complete turn."],
+  ["travel", "The marker travels from A to B. Which direction does it move?", "Right", "Left", "Up", "Down", "The marker moves from A on the left toward B on the right."],
+  ["fill", "The tank fills from the bottom. What happens to the water level?", "It rises", "It falls", "It stays fixed", "It moves sideways only", "The top of the water rises as the tank fills."],
+  ["sequence", "The numbered lights repeat 1, 2, 3, 4. Which lights up after 4?", "1", "2", "3", "4 again", "After 4, the sequence starts again at 1."],
+  ["scale", "The circle grows and shrinks. When it grows, what happens to its diameter?", "It increases", "It decreases", "It stays the same", "It becomes a triangle", "A larger circle has a larger diameter."],
+  ["mirror", "The two markers move apart from the center. Which moves to the left?", "The left marker", "The right marker", "Both markers", "Neither marker", "The left marker moves left while the right marker moves right."],
+  ["travel", "The marker starts at A and ends at B. If A is 0 and B is 10, what is halfway?", "5", "2", "8", "10", "The midpoint between 0 and 10 is 5."],
+  ["fill", "If the tank fills at a steady rate, when is it half full?", "Halfway through filling", "Only at the start", "Only when full", "After it empties", "At a steady rate, half the filling time gives half the volume."],
+  ["sequence", "The numbered lights repeat 1, 2, 3, 4. Which number comes between 2 and 4?", "3", "1", "2", "4", "The order is 1, 2, 3, 4."],
+  ["scale", "When the growing circle reaches its largest size, what happens next?", "It shrinks", "It keeps growing forever", "It stops permanently", "It becomes a square", "The animation reverses and the circle gets smaller."],
+  ["mirror", "The two markers move apart, then return. What happens to the distance between them on the return?", "It decreases", "It increases", "It stays fixed", "It doubles", "The markers move back toward each other, decreasing the gap."],
+  ["travel", "If the marker moves from A to B in 4 seconds at a steady speed, how long does half the distance take?", "2 seconds", "1 second", "4 seconds", "8 seconds", "At a steady speed, half the distance takes half the time."],
+  ["fill", "The tank holds 8 cups when full. How much does it hold when half full?", "4 cups", "2 cups", "6 cups", "8 cups", "Half of 8 cups is 4 cups."],
+  ["sequence", "If the lights continue 1, 2, 3, 4, 1, what comes next?", "2", "1", "3", "4", "The repeating sequence continues with 2 after 1."],
+  ["scale", "The circle returns to its starting size after growing. Has its shape changed?", "No, it is still a circle", "Yes, it is a square", "Yes, it is a triangle", "It has no shape", "Scaling changes the circle's size, not its shape."],
+  ["mirror", "The markers start together, move apart, and return together. Which point do they return to?", "The center", "The left edge", "The right edge", "Different corners", "Both markers return to the center."],
+  ["travel", "The marker travels 10 units from A to B. How far is a point 2 units before B from A?", "8 units", "2 units", "10 units", "12 units", "A point 2 units before B is 10 − 2 = 8 units from A."],
 ];
 const motionQuestions = motionRows.map(([motion, q, correct, ...rest], i) => {
   const explain = rest.pop();
@@ -278,27 +278,29 @@ const motionQuestions = motionRows.map(([motion, q, correct, ...rest], i) => {
 });
 additionalGames["Animated puzzles"] = [motionQuestions.slice(0, 8), motionQuestions.slice(8)];
 
-const pitchPatterns = [
-  "LMH", "LHM", "MLH", "MHL", "HLM", "HML", "LML", "LHL",
-  "MLM", "MHM", "HLH", "HMH", "LLH", "HHL", "MML", "MMH",
+const soundRows = [
+  [[220, 330, 440], "Do the three tones go up, down, or stay the same?", "Up", "Down", "Stay the same", "Down then up", "Each tone is higher than the one before it."],
+  [[440, 330, 220], "Which tone is lowest?", "Third", "First", "Second", "All are equal", "The third tone has the lowest pitch."],
+  [[330, 330, 330, 330], "How many beeps do you hear?", "4", "2", "3", "5", "There are four beeps."],
+  [[330, 0, 330, 330], "What rhythm do you hear?", "Beep, rest, beep, beep", "Beep, beep, rest, beep", "Four beeps", "Beep, rest, rest, beep", "A silent beat follows the first beep, then two beeps sound."],
+  [[220, 440, 220, 440], "The low–high pattern repeats. What pitch would come next?", "Low", "High", "Middle", "Silence", "Low and high alternate, so low follows high."],
+  [[220, 440, 220], "Which two tones have the same pitch?", "First and third", "First and second", "Second and third", "None", "The first and third tones are both low."],
+  [[330, 0, 0, 330], "How many silent beats are between the two beeps?", "2", "0", "1", "3", "Two silent beats separate the beeps."],
+  [[440, 220, 330], "Where is the highest tone?", "First", "Second", "Third", "All are equal", "The first tone is highest."],
+  [[220, 330, 220, 330, 220, 330], "Which two-tone group repeats?", "Low, then high", "High, then low", "Low, then low", "High, then high", "The six tones repeat low, high three times."],
+  [[330, 330, 0, 330], "What rhythm do you hear?", "Beep, beep, rest, beep", "Beep, rest, beep, beep", "Four beeps", "Rest, beep, rest, beep", "Two beeps are followed by a rest and a final beep."],
+  [[330, 440, 330], "Does the pitch rise, fall, or do both?", "Rises then falls", "Falls then rises", "Only rises", "Stays the same", "The second tone is higher, then the third returns to the first pitch."],
+  [[220, 220, 440, 220, 220, 440], "How many low tones come before each high tone?", "2", "1", "3", "4", "The repeated group is low, low, high."],
+  [[330, 0, 330, 0, 330], "How many beeps do you hear, ignoring the silent beats?", "3", "2", "4", "5", "There are three beeps separated by two rests."],
+  [[440, 220, 330, 220], "Which tone is highest?", "First", "Second", "Third", "Fourth", "The first tone is the highest pitch."],
+  [[330, 330, 440, 330], "Which tone differs in pitch from the other three?", "Third", "First", "Second", "Fourth", "The third tone is higher than the other three."],
+  [[440, 330, 220, 330], "What happens to the pitch after the lowest tone?", "It rises", "It falls", "It stays the same", "The clue ends immediately", "The final tone rises from the third, lowest tone."],
 ];
-const pitchFrequencies = { L: 220, M: 330, H: 440 };
-const pitchNames = { L: "low", M: "middle", H: "high" };
-const soundQuestions = pitchPatterns.map((pattern, i) => {
-  const alternatives = [pattern];
-  for (const candidate of pitchPatterns) {
-    if (candidate !== pattern && alternatives.length < 4) alternatives.push(candidate);
-  }
+const soundQuestions = soundRows.map(([sound, q, correct, ...rest], i) => {
+  const explain = rest.pop();
+  const choices = [correct, ...rest];
   const answer = i % 4;
-  [alternatives[0], alternatives[answer]] = [alternatives[answer], alternatives[0]];
-  const describe = (notes) => [...notes].map((note) => pitchNames[note]).join(" → ");
-  return {
-    type: "Sound", icon: "♫",
-    q: "Play the clue. Which pitch sequence do you hear?",
-    sound: [...pattern].map((note) => pitchFrequencies[note]),
-    choices: alternatives.map(describe), answer,
-    hint: "Listen for low, middle and high pitches in order.",
-    explain: `The pitches were ${describe(pattern)}.`,
-  };
+  [choices[0], choices[answer]] = [choices[answer], choices[0]];
+  return { type: "Sound", icon: "♫", sound, q, choices, answer, hint: "Play the clue again and listen for changes or silent beats.", explain };
 });
 additionalGames.Sound = [soundQuestions.slice(0, 8), soundQuestions.slice(8)];

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#f5f3ed" />
     <title>Mindfield — A little workout for your brain</title>
+    <link rel="stylesheet" href="activity-games.css" />
     <style>
       @import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap");
       :root {
@@ -708,6 +709,94 @@
         border-radius: 16px;
         overflow: hidden;
       }
+      .motion-track {
+        position: relative;
+        width: 76%;
+        border-bottom: 2px solid #879c88;
+        display: flex;
+        justify-content: space-between;
+        padding-bottom: 12px;
+        font: 600 12px "DM Mono", monospace;
+      }
+      .motion-caption {
+        position: absolute;
+        bottom: 3px;
+        left: 3px;
+        right: 3px;
+        text-align: center;
+        font: 10px "DM Sans", sans-serif;
+        color: #48594b;
+      }
+      .motion-track i {
+        position: absolute;
+        bottom: -7px;
+        left: 0;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: #426b4d;
+        animation: travelTrack 3s linear infinite;
+      }
+      .motion-tank {
+        width: 65px;
+        height: 64px;
+        border: 3px solid #426b4d;
+        border-top: 0;
+        display: flex;
+        align-items: flex-end;
+      }
+      .motion-tank i {
+        width: 100%;
+        background: #8dbedf;
+        animation: fillTank 4s linear infinite;
+      }
+      .motion-steps { display: flex; gap: 12px; }
+      .motion-steps i {
+        width: 39px;
+        height: 39px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: #dce5d8;
+        font: normal 600 14px "DM Mono", monospace;
+        animation: stepLight 4s linear infinite;
+      }
+      .motion-steps i:nth-child(2) { animation-delay: 1s; }
+      .motion-steps i:nth-child(3) { animation-delay: 2s; }
+      .motion-steps i:nth-child(4) { animation-delay: 3s; }
+      .motion-size {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background: #83b47a;
+        animation: sizePulse 3s ease-in-out infinite alternate;
+      }
+      .motion-mirror {
+        position: relative;
+        width: 180px;
+        height: 30px;
+        border-bottom: 1px solid #aeb8a9;
+      }
+      .motion-mirror i {
+        position: absolute;
+        left: calc(50% - 7px);
+        bottom: -7px;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: #426b4d;
+        animation: mirrorLeft 3s ease-in-out infinite alternate;
+      }
+      .motion-mirror i + i { background: #d88a64; animation-name: mirrorRight; }
+      @keyframes travelTrack { from { left: 0; } to { left: calc(100% - 14px); } }
+      @keyframes fillTank { from { height: 0; } to { height: 100%; } }
+      @keyframes stepLight {
+        0%, 24% { background: #80b276; color: #182421; }
+        25%, 100% { background: #dce5d8; color: #718079; }
+      }
+      @keyframes sizePulse { from { transform: scale(0.7); } to { transform: scale(1.7); } }
+      @keyframes mirrorLeft { from { transform: translateX(0); } to { transform: translateX(-65px); } }
+      @keyframes mirrorRight { from { transform: translateX(0); } to { transform: translateX(65px); } }
       .motion-orbit {
         width: 70px;
         height: 70px;
@@ -1115,7 +1204,7 @@
           <div class="stat">
             <span class="stat-name"
               ><i class="dot" style="background: #ac8de0"></i>Interactive games</span
-            ><span class="stat-val">2</span>
+            ><span class="stat-val">10</span>
           </div>
           <div class="score-box">
             <div class="score-label" id="scoreLabel">Puzzles solved</div>
@@ -1135,6 +1224,7 @@
       </div>
     </div>
     <script src="additional-games.js"></script>
+    <script src="activity-games.js"></script>
     <script>
       const gameOne = [
         {
@@ -2664,7 +2754,7 @@
         gameProbability,
         gameWordLadder,
       ];
-      const games = [gameOne, gameTwo, ...newGames, gameMath, null, null],
+      const games = [gameOne, gameTwo, ...newGames, gameMath, null, null, ...activityGameNames.map(() => null)],
         gameNames = [
           "Original",
           "Challenge 2",
@@ -2684,6 +2774,7 @@
           "Math",
           "Word Search",
           "Simon",
+          ...activityGameNames,
         ];
       let gameIndex = 8,
         setIndex = 0,
@@ -2706,8 +2797,8 @@
           Physics: "#779ed9",
         };
       const $ = (id) => document.getElementById(id);
-      const wordGameIndex = games.length - 2,
-        simonGameIndex = games.length - 1;
+      const wordGameIndex = gameNames.indexOf("Word Search"),
+        simonGameIndex = gameNames.indexOf("Simon");
       let activityTimers = [],
         audioContext = null,
         wordPuzzleIndex = 0;
@@ -2727,24 +2818,31 @@
         }
       }
       function renderTabs() {
-        $("gameTabs").innerHTML = gameNames
+        $("gameTabs").innerHTML = gameNames.slice(0, wordGameIndex)
           .map((name, i) => additionalGames[name]
             ? `<select class="game-select ${i === gameIndex ? "active" : ""}" data-game="${i}" aria-label="${name} puzzle set">
                 <option value="" ${i !== gameIndex ? "selected" : ""} disabled>${name}</option>
                 ${[0, 1, 2].map((set) => `<option value="${set}" ${i === gameIndex && set === setIndex ? "selected" : ""}>${name} · Game ${set + 1}</option>`).join("")}
               </select>`
             : `<button class="game-tab ${i === gameIndex ? "active" : ""}" data-game="${i}" ${i === gameIndex ? 'aria-current="true"' : ""}>${name}</button>`)
-          .join("");
+          .join("") + `<select class="game-select ${gameIndex >= wordGameIndex ? "active" : ""}" id="activitySelect" aria-label="More games">
+            <option value="" ${gameIndex < wordGameIndex ? "selected" : ""} disabled>More games</option>
+            ${gameNames.slice(wordGameIndex).map((name, i) => `<option value="${wordGameIndex + i}" ${gameIndex === wordGameIndex + i ? "selected" : ""}>${name}</option>`).join("")}
+          </select>`;
         $("gameTabs").querySelectorAll(".game-tab").forEach((b) => {
           b.onclick = () => switchGame(+b.dataset.game);
         });
-        $("gameTabs").querySelectorAll(".game-select").forEach((select) => {
+        $("gameTabs").querySelectorAll(".game-select[data-game]").forEach((select) => {
           select.onchange = () => {
             const selectedGame = +select.dataset.game;
             switchGame(selectedGame, +select.value);
             $("gameTabs").querySelector(`.game-select[data-game="${selectedGame}"]`).focus({ preventScroll: true });
           };
         });
+        $("activitySelect").onchange = (event) => {
+          switchGame(Number(event.target.value));
+          $("activitySelect").focus({ preventScroll: true });
+        };
       }
       function playSound(pattern) {
         const Audio = window.AudioContext || window.webkitAudioContext;
@@ -2778,8 +2876,20 @@
           spinner: '<span class="motion-spinner">↑</span>',
           wave: '<div class="motion-wave"><i></i><i></i><i></i><i></i><i></i></div>',
           signals: '<div class="motion-signals"><i></i><i></i><i></i></div>',
+          travel: '<div class="motion-track"><span>A</span><span>B</span><i></i></div>',
+          fill: '<div class="motion-tank"><i></i></div>',
+          sequence: '<div class="motion-steps"><i>1</i><i>2</i><i>3</i><i>4</i></div>',
+          scale: '<div class="motion-size"></div>',
+          mirror: '<div class="motion-mirror"><i></i><i></i></div>',
         };
-        return `<div class="motion-scene">${parts[kind] || ""}</div>`;
+        const captions = {
+          travel: "Marker travels from A to B, then repeats.",
+          fill: "Tank fills steadily from the bottom, then repeats.",
+          sequence: "Lights repeat in order: 1, 2, 3, 4.",
+          scale: "Circle grows, then shrinks back.",
+          mirror: "Markers move apart, then return to the center.",
+        };
+        return `<div class="motion-scene">${parts[kind] || ""}${captions[kind] ? `<span class="motion-caption">${captions[kind]}</span>` : ""}</div>`;
       }
       function render() {
         clearTimeout(memoryTimer);
@@ -2888,6 +2998,7 @@
         document.querySelectorAll(".memory-note").forEach((note) => note.remove());
         if (n === wordGameIndex) renderWordSearch();
         else if (n === simonGameIndex) renderSimon();
+        else if (n > simonGameIndex) renderActivityGame(gameNames[n]);
         else render();
         renderTabs();
       }

@@ -1,0 +1,150 @@
+.puzzle-panel {
+  max-width: 520px;
+}
+.puzzle-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 0;
+}
+.puzzle-controls button,
+.puzzle-controls select,
+.puzzle-controls input {
+  border: 1px solid #9ab999;
+  border-radius: 10px;
+  padding: 9px 12px;
+  background: #edf5e9;
+  color: #182421;
+  font: inherit;
+}
+.puzzle-controls input {
+  max-width: 180px;
+}
+.puzzle-controls button:disabled {
+  opacity: 0.5;
+}
+.puzzle-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
+  gap: 4px;
+  width: min(100%, 420px);
+  margin: 14px 0;
+}
+.puzzle-cell {
+  min-width: 0;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 1px solid #c8d6c5;
+  border-radius: 7px;
+  background: #f3f6ed;
+  font: 600 clamp(14px, 4vw, 23px) "DM Sans", sans-serif;
+}
+.puzzle-cell:focus-visible,
+.puzzle-controls button:focus-visible,
+.puzzle-controls input:focus-visible,
+.puzzle-controls select:focus-visible {
+  outline: 3px solid #315e3b;
+  outline-offset: 2px;
+}
+.puzzle-cell.selected { outline: 3px solid #315e3b; outline-offset: -3px; }
+.puzzle-cell.found { background: #c9e8bc; border-color: #426b4d; }
+.puzzle-cell:disabled { cursor: default; }
+.sudoku-grid { gap: 2px; }
+.sudoku-grid .puzzle-cell { text-align: center; border-radius: 2px; }
+.sudoku-grid input { width: 100%; color: #214f87; background: #fffefa; }
+.sudoku-grid input[readonly] { background: #e9eee4; color: #182421; font-weight: 700; }
+.sudoku-grid .box-right { border-right: 3px solid #426b4d; }
+.sudoku-grid .box-bottom { border-bottom: 3px solid #426b4d; }
+.matching-grid { max-width: 390px; }
+.matching-grid .puzzle-cell { font-size: clamp(18px, 5vw, 30px); }
+.matching-grid .card-name { display: block; font-size: clamp(9px, 2.5vw, 12px); line-height: 1; }
+.difference-boards { display: flex; flex-wrap: wrap; gap: 12px; }
+.difference-boards > div { width: min(100%, 230px); }
+.difference-boards .puzzle-grid { margin-top: 6px; }
+.difference-boards .puzzle-cell { font-size: clamp(17px, 4vw, 25px); }
+.jigsaw-grid { gap: 2px; }
+.jigsaw-grid .puzzle-cell {
+  background-size: 300% 300%;
+  border-radius: 2px;
+  text-shadow: 0 1px 3px white, 0 0 4px white;
+  color: #182421;
+}
+.cube-layout { display: flex; flex-wrap: wrap; gap: 12px; }
+.cube-face { width: 110px; }
+.cube-face h3 { font-size: 13px; margin: 0; }
+.cube-face .puzzle-grid { gap: 2px; margin: 5px 0; }
+.cube-sticker {
+  aspect-ratio: 1;
+  border: 1px solid #182421;
+  border-radius: 3px;
+  display: grid;
+  place-items: center;
+  color: #182421;
+  font: 700 11px "DM Sans", sans-serif;
+}
+.checkers-grid { gap: 0; }
+.checkers-grid .puzzle-cell { border: 0; border-radius: 0; }
+.checkers-grid .light { background: #e9e4d4; }
+.checkers-grid .dark { background: #6b886c; }
+.checkers-piece {
+  display: grid;
+  place-items: center;
+  width: 75%;
+  height: 75%;
+  margin: auto;
+  border-radius: 50%;
+  font-size: clamp(12px, 3vw, 20px);
+  font-weight: 700;
+}
+.checkers-piece.player { background: #f7f1df; color: #182421; border: 2px solid #182421; }
+.checkers-piece.computer { background: #263d30; color: #fff; border: 2px solid #fff; }
+.tile-rack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 14px 0;
+}
+.tile-rack span {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 42px;
+  border: 1px solid #c7b98d;
+  border-radius: 6px;
+  background: #f7edc9;
+  font-weight: 700;
+}
+.guess-board {
+  display: grid;
+  gap: 5px;
+  width: min(100%, 300px);
+  margin: 14px 0;
+}
+.guess-row {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 5px;
+}
+.guess-cell {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border: 1px solid #aeb8a9;
+  border-radius: 7px;
+  background: #e5e8e4;
+  color: #182421;
+  font-size: 22px;
+  font-weight: 700;
+}
+.guess-cell.empty { background: #fffefa; border-color: #d7ded3; }
+.guess-cell.correct { background: #b7dfaa; border-color: #426b4d; }
+.guess-cell.present { background: #f4dc78; border-color: #a58028; }
+.guess-cell small {
+  position: absolute;
+  right: 3px;
+  bottom: 1px;
+  font-size: 12px;
+  line-height: 1;
+}
