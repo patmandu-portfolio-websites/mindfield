@@ -408,7 +408,7 @@ function bestTileMove(board, rack) {
   return best;
 }
 
-function renderWordTiles() {
+function renderWordTiles(first = "player") {
   activityShell("Word Tiles", "Play against the computer on a 10 × 10 board. Select the first square and direction, then enter the complete word, including any board letters. The first word covers the star; later words must connect. Each player keeps unused tiles and draws back up to six. Only the built-in word list counts.", "Your points");
   let board = Array(tileBoardSize * tileBoardSize).fill(null), player = 0, computer = 0, selected = tileCenter, passes = 0, finished = false;
   const racks = shuffleActivity(tileRacks);
@@ -416,6 +416,10 @@ function renderWordTiles() {
   const bag = shuffleActivity([...tileBagLetters]);
   $("activityContent").innerHTML = `
     <p>Letter values are shown on the tiles. DL and TL double or triple a newly placed letter; DW and TW double or triple each word it makes. Bonuses are used only once, and multiple word bonuses multiply together. Two consecutive passes end the game, as does emptying a rack when the bag is empty.</p>
+    <div class="puzzle-controls">
+      <label for="tileFirst">First turn (next game)</label><select id="tileFirst"><option value="player">You</option><option value="computer">Computer</option></select>
+      <button id="tileRestart">New game</button>
+    </div>
     <div id="tileBoard" class="tile-board" style="--tile-columns: ${tileBoardSize}" aria-label="Word Tiles board"></div>
     <div id="tileBag"></div><div class="tile-rack" id="tileRack" aria-label="Available letters"></div>
     <details id="tileWordList"><summary>Show built-in word list</summary><p id="tileDictionary"></p></details>
@@ -423,8 +427,9 @@ function renderWordTiles() {
       <label for="tileDirection">Direction</label><select id="tileDirection"><option value="across">Across</option><option value="down">Down</option></select>
       <label for="tileInput">Complete word</label><input id="tileInput" autocomplete="off" maxlength="${tileBoardSize}" required aria-describedby="tileError">
       <button type="submit">Play word</button><button type="button" id="tilePass">Pass</button>
-    </form><div id="tileError" role="alert"></div><div id="tileScores"></div><div id="tileFeedback"></div>
-    <div class="puzzle-controls"><button id="tileRestart">New game</button></div>`;
+    </form><div id="tileError" role="alert"></div><div id="tileScores"></div><div id="tileFeedback"></div>`;
+  $("tileFirst").value = first;
+  $("tileFeedback").textContent = "";
   $("tileWordList").ontoggle = () => {
     if ($("tileWordList").open && !$("tileDictionary").textContent) {
       $("tileDictionary").textContent = [...tileDictionary].sort().join(", ");
@@ -471,10 +476,10 @@ function renderWordTiles() {
       computerRack = applyMove(move, computerRack);
       computer += move.score;
       passes = 0;
-      $("tileFeedback").textContent += ` Computer played ${move.word} for ${move.score} points.`;
+      $("tileFeedback").textContent = [$("tileFeedback").textContent, `Computer played ${move.word} for ${move.score} points.`].filter(Boolean).join(" ");
     } else {
       passes++;
-      $("tileFeedback").textContent += " Computer passed.";
+      $("tileFeedback").textContent = [$("tileFeedback").textContent, "Computer passed."].filter(Boolean).join(" ");
     }
     draw();
     if (passes >= 2 || (!bag.length && !computerRack.length)) endGame();
@@ -515,9 +520,10 @@ function renderWordTiles() {
     if (passes >= 2) { draw(); endGame(); }
     else computerTurn();
   };
-  $("tileRestart").onclick = renderWordTiles;
+  $("tileRestart").onclick = () => renderWordTiles($("tileFirst").value);
   draw();
-  $("activityStatus").textContent = "Your turn. Select the first square of your word.";
+  if (first === "computer") computerTurn();
+  else $("activityStatus").textContent = "Your turn. Select the first square of your word.";
 }
 
 const wordGuessAnswers = [

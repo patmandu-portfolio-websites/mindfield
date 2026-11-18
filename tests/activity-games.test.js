@@ -279,6 +279,47 @@ test("Word Tiles refills unused tiles, plays the computer and restarts", () => {
   assert.equal(element("tileRack").attributes["aria-label"], "Available letters: S, T, A, R, E, S");
 });
 
+test("Word Tiles can start with the computer and remembers the selection for new games", () => {
+  const elements = new Map();
+  function element(id) {
+    if (!elements.has(id)) elements.set(id, {
+      textContent: "", innerHTML: "", value: "", disabled: false, attributes: {},
+      setAttribute(name, value) { this.attributes[name] = value; },
+      removeAttribute(name) { delete this.attributes[name]; },
+      querySelectorAll() { return []; },
+    });
+    return elements.get(id);
+  }
+  const testContext = vm.createContext({ $: element });
+  vm.runInContext(`${source}
+    shuffleActivity = (items) => [...items];
+    renderWordTiles();`, testContext);
+  assert.equal(element("tileFirst").value, "player");
+  assert.equal(element("tileScores").textContent, "You: 0 · Computer: 0");
+  element("tileFirst").value = "computer";
+  assert.equal(element("tileScores").textContent, "You: 0 · Computer: 0");
+  element("tileRestart").onclick();
+  assert.equal(element("tileFirst").value, "computer");
+  assert.match(element("tileBoard").innerHTML, /class="tile-square occupied[^"]*" data-index="44"/);
+  assert.match(element("tileFeedback").textContent, /^Computer played .+ for \d+ points\.$/);
+  assert.match(element("tileScores").textContent, /^You: 0 · Computer: [1-9]\d*$/);
+  assert.match(element("activityStatus").textContent, /^Your turn/);
+  element("tileRestart").onclick();
+  assert.equal(element("tileFirst").value, "computer");
+  assert.match(element("tileFeedback").textContent, /^Computer played/);
+  element("tileFirst").value = "player";
+  element("tileRestart").onclick();
+  assert.equal(element("tileScores").textContent, "You: 0 · Computer: 0");
+  assert.doesNotMatch(element("tileBoard").innerHTML, /tile-square occupied/);
+  vm.runInContext("bestTileMove = () => null", testContext);
+  element("tileFirst").value = "computer";
+  element("tileRestart").onclick();
+  assert.equal(element("tileFeedback").textContent, "Computer passed.");
+  assert.match(element("activityStatus").textContent, /^Your turn/);
+  element("tilePass").onclick();
+  assert.match(element("activityStatus").textContent, /^Game over/);
+});
+
 test("Word Guess handles repeated letters without overcounting", () => {
   assert.deepEqual([...api.scoreWordGuess("APPLE", "ALLEY")], ["correct", "present", "absent", "present", "absent"]);
   assert.deepEqual([...api.scoreWordGuess("SHEEP", "EERIE")], ["present", "present", "absent", "absent", "absent"]);
