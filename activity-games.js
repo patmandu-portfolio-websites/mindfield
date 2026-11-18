@@ -1,5 +1,5 @@
 const activityGameNames = [
-  "Sudoku", "Word Tiles", "Jigsaw", "Color Cube",
+  "Sudoku", "Word Tiles", "Word Tiles Classic", "Jigsaw", "Color Cube",
   "Spot the Difference", "Card Matching", "Checkers", "Word Guess",
 ];
 
@@ -30,6 +30,7 @@ function renderActivityGame(name) {
   const renderers = {
     Sudoku: renderSudoku,
     "Word Tiles": renderWordTiles,
+    "Word Tiles Classic": renderWordTilesClassic,
     Jigsaw: renderJigsaw,
     "Color Cube": renderColorCube,
     "Spot the Difference": renderDifferences,
@@ -202,6 +203,75 @@ function canMakeWord(word, rack) {
     return true;
   });
 }
+
+function renderWordTilesClassic() {
+  activityShell("Word Tiles Classic", "Build a word of 3–5 letters from the shared six-letter rack. Each round has new letters. You and the computer each score one point per letter over five rounds. Only words in the built-in list count.", "Your points");
+  let round = 0, player = 0, computer = 0, rack = "", finished = false;
+  let options = [];
+  const racks = shuffleActivity(tileRacks);
+  $("activityContent").innerHTML = `
+    <div id="tileRound"></div><div class="tile-rack" id="tileRack" aria-label="Available letters"></div>
+    <details><summary>Show accepted words for this rack</summary><p id="tileDictionary"></p></details>
+    <form class="puzzle-controls" id="tileForm">
+      <label for="tileInput">Your word</label><input id="tileInput" autocomplete="off" maxlength="5" required aria-describedby="tileError">
+      <button type="submit">Play word</button><button type="button" id="tilePass">Pass</button>
+    </form><div id="tileError" role="alert"></div><div id="tileScores"></div><div id="tileFeedback"></div>
+    <div class="puzzle-controls"><button id="tileRestart">New game</button></div>`;
+  function showRound() {
+    $("tileRound").textContent = `Round ${round + 1} of 5`;
+    rack = shuffleActivity([...racks[round]]).join("");
+    $("tileRack").innerHTML = [...rack].map((letter) => `<span>${letter}</span>`).join("");
+    $("tileRack").setAttribute("aria-label", `Available letters: ${[...rack].join(", ")}`);
+    options = [...new Set(tileWords)].filter((word) => word.length >= 3 && word.length <= 5 && canMakeWord(word, rack));
+    $("tileDictionary").textContent = [...options].sort().join(", ");
+    $("tileInput").value = "";
+    $("tileInput").removeAttribute("aria-invalid");
+    $("tileError").textContent = "";
+    $("tileScores").textContent = `You: ${player} · Computer: ${computer}`;
+    $("activityStatus").textContent = `Round ${round + 1}: make a word from the new letters.`;
+  }
+  function play(word) {
+    if (finished) return;
+    if (word && !options.includes(word)) {
+      $("tileInput").setAttribute("aria-invalid", "true");
+      $("tileError").textContent = word.length < 3 || word.length > 5
+        ? "Enter a word of 3–5 letters."
+        : canMakeWord(word, rack)
+        ? `"${word}" is not in the built-in word list. Open the accepted words list or try another word.`
+        : `"${word}" cannot be made from the current letters. Try another word.`;
+      return;
+    }
+    const computerOptions = [...options].sort((a, b) => b.length - a.length || a.localeCompare(b));
+    const computerWord = computerOptions[Math.floor(Math.random() * Math.min(4, computerOptions.length))];
+    player += word.length;
+    computer += computerWord.length;
+    $("score").textContent = player;
+    $("tileFeedback").textContent = `You played ${word || "nothing"}; computer played ${computerWord}.`;
+    round++;
+    if (round === 5) {
+      finished = true;
+      $("tileRound").textContent = "Game complete";
+      $("tileScores").textContent = `You: ${player} · Computer: ${computer}`;
+      $("activityStatus").textContent = player === computer ? "A tie!" : player > computer ? "You win!" : "The computer wins. Try again!";
+      $("tileInput").disabled = true;
+      $("tileForm").querySelectorAll("button").forEach((button) => { button.disabled = true; });
+    } else showRound();
+  }
+  $("tileForm").onsubmit = (event) => {
+    event.preventDefault();
+    const word = $("tileInput").value.trim().toUpperCase();
+    if (!word) {
+      $("tileInput").setAttribute("aria-invalid", "true");
+      $("tileError").textContent = "Enter a word, or choose Pass.";
+      return;
+    }
+    play(word);
+  };
+  $("tilePass").onclick = () => play("");
+  $("tileRestart").onclick = renderWordTilesClassic;
+  showRound();
+}
+
 const tileBoardSize = 10;
 const tileCenter = 4 * tileBoardSize + 4;
 const tileValues = {

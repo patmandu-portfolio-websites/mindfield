@@ -77,6 +77,51 @@ test("every word rack has at least 50 distinct playable words", () => {
   assert.equal(api.canMakeWord("STARES", "STARE"), false);
 });
 
+test("Word Tiles Classic restores five rounds, validation, passing and restart", () => {
+  const elements = new Map(), formButtons = [{ disabled: false }, { disabled: false }];
+  function element(id) {
+    if (!elements.has(id)) elements.set(id, {
+      textContent: "", innerHTML: "", value: "", disabled: false, attributes: {},
+      setAttribute(name, value) { this.attributes[name] = value; },
+      removeAttribute(name) { delete this.attributes[name]; },
+      querySelectorAll() { return id === "tileForm" ? formButtons : []; },
+    });
+    return elements.get(id);
+  }
+  const testContext = vm.createContext({ $: element });
+  vm.runInContext(`${source}
+    Math.random = () => 0;
+    shuffleActivity = (items) => items[0] === "STARES"
+      ? ["STONER", "STARES", "SCARET", "DREAMT", "SLATER"]
+      : [...items];
+    renderActivityGame("Word Tiles Classic");`, testContext);
+  const submit = (word) => {
+    element("tileInput").value = word;
+    element("tileForm").onsubmit({ preventDefault() {} });
+  };
+  assert.match(element("activity").innerHTML, /Word Tiles Classic/);
+  submit("note");
+  assert.equal(element("tileRound").textContent, "Round 2 of 5");
+  assert.equal(element("tileRack").attributes["aria-label"], "Available letters: S, T, A, R, E, S");
+  submit("ta");
+  assert.match(element("tileError").textContent, /3–5 letters/);
+  submit("tas");
+  assert.match(element("tileError").textContent, /not in the built-in word list/);
+  submit("taser");
+  assert.equal(element("score").textContent, 9);
+  assert.equal(element("tileRound").textContent, "Round 3 of 5");
+  submit("xyz");
+  assert.match(element("tileError").textContent, /cannot be made/);
+  for (let i = 0; i < 3; i++) element("tilePass").onclick();
+  assert.equal(element("tileRound").textContent, "Game complete");
+  assert.equal(element("tileInput").disabled, true);
+  assert.ok(formButtons.every((button) => button.disabled));
+  assert.match(element("tileScores").textContent, /^You: 9 · Computer: \d+$/);
+  element("tileRestart").onclick();
+  assert.equal(element("tileRound").textContent, "Round 1 of 5");
+  assert.equal(element("score").textContent, "0");
+});
+
 test("Word Tiles accepts common new words and extensions", () => {
   for (const word of ["MOST", "ANT", "ANTS", "LESS", "TEST", "TESTS", "SCAM", "SCAMS", "CANDLE", "RESCUE", "CURE", "QUEUE", "QUIZ", "FUNGUS"]) {
     const move = api.tileMove(Array(100).fill(null), word, word, 4, 3, "across");
