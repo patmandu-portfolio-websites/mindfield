@@ -4,10 +4,12 @@ const fs = require("node:fs");
 const vm = require("node:vm");
 const path = require("node:path");
 
-const source = fs.readFileSync(path.join(__dirname, "..", "activity-games.js"), "utf8");
+const source = ["tile-words.js", "activity-games.js"]
+  .map((file) => fs.readFileSync(path.join(__dirname, "..", file), "utf8"))
+  .join("\n");
 const context = vm.createContext({});
 const api = vm.runInContext(`${source}
-  ({ sudokuPuzzles, cubeFaces, makeCube, turnCube, cubeSolved, makeCheckersBoard, checkersMoves, applyCheckersMove, tileWords, tileRacks, canMakeWord, wordGuessAnswers, scoreWordGuess })`, context);
+  ({ sudokuPuzzles, cubeFaces, makeCube, turnCube, cubeSolved, makeCheckersBoard, checkersMoves, applyCheckersMove, tileWords, tileRacks, canMakeWord, tileMove, bestTileMove, wordGuessAnswers, scoreWordGuess })`, context);
 
 test("Sudoku clues agree with valid solutions", () => {
   for (const [sizeText, puzzles] of Object.entries(api.sudokuPuzzles)) {
@@ -75,46 +77,161 @@ test("every word rack has at least 50 distinct playable words", () => {
   assert.equal(api.canMakeWord("STARES", "STARE"), false);
 });
 
-test("Word Tiles accepts TASER in round two and reports rejected words", () => {
+test("Word Tiles accepts common new words and extensions", () => {
+  for (const word of ["MOST", "ANT", "ANTS", "LESS", "TEST", "TESTS", "SCAM", "SCAMS", "CANDLE", "RESCUE", "CURE", "QUEUE", "QUIZ", "FUNGUS"]) {
+    const move = api.tileMove(Array(100).fill(null), word, word, 4, 3, "across");
+    assert.equal(move.error, undefined, word);
+  }
+  const board = Array(100).fill(null);
+  [..."ANT"].forEach((letter, i) => { board[43 + i] = letter; });
+  const move = api.tileMove(board, "S", "ANTS", 4, 3, "across");
+  assert.equal(move.error, undefined);
+  assert.equal(move.placed.length, 1);
+  const testBoard = Array(100).fill(null);
+  [..."TEST"].forEach((letter, i) => { testBoard[43 + i] = letter; });
+  assert.equal(api.tileMove(testBoard, "S", "TESTS", 4, 3, "across").error, undefined);
+});
+
+test("indexed computer search finds the same best score as exhaustive search", () => {
+  const results = vm.runInContext(`(() => {
+    function exhaustive(board, rack) {
+      let best = null;
+      const available = rack + board.filter(Boolean).join("");
+      for (const word of tileDictionary) {
+        if (!canMakeWord(word, available)) continue;
+        for (const direction of ["across", "down"]) {
+          for (let row = 0; row < tileBoardSize; row++) {
+            for (let col = 0; col < tileBoardSize; col++) {
+              const move = tileMove(board, rack, word, row, col, direction);
+              if (!move.error && (best === null || move.score > best)) best = move.score;
+            }
+          }
+        }
+      }
+      return best;
+    }
+    const empty = Array(100).fill(null), board = Array(100).fill(null);
+    [..."STAR"].forEach((letter, i) => { board[43 + i] = letter; });
+    return [[empty, "STARES"], [board, "CANDLE"], [board, "SSSTEE"], [board, "RESCUE"], [board, "QUIZZY"]].map(([grid, rack]) => {
+      const move = bestTileMove(grid, rack);
+      return { indexed: move ? move.score : null, exhaustive: exhaustive(grid, rack) };
+    });
+  })()`, context);
+  for (const result of results) assert.equal(result.indexed, result.exhaustive);
+});
+
+test("Word Tiles supports full racks, board connections and letter bonuses", () => {
+  for (const rack of api.tileRacks) {
+    assert.ok(api.tileWords.some((word) => word.length === rack.length && api.canMakeWord(word, rack)), rack);
+  }
+  const board = Array(100).fill(null);
+  assert.match(api.tileMove(board, "STARES", "STARES", 0, 0, "across").error, /center/);
+  const opening = api.tileMove(board, "STARES", "STARES", 4, 2, "across");
+  assert.equal(opening.placed.length, 6);
+  assert.equal(opening.score, 6);
+  for (const tile of opening.placed) board[tile.index] = tile.letter;
+  assert.match(api.tileMove(board, "NOTE", "NOTE", 0, 0, "across").error, /Connect/);
+  assert.match(api.tileMove(board, "NOTE", "NOTE", 3, 4, "down").error, /conflicts/);
+  assert.match(api.tileMove(board, "N", "SON", 4, 2, "down").error, /letters needed/);
+  const crossing = api.tileMove(board, "ON", "SON", 4, 2, "down");
+  assert.equal(crossing.score, 5);
+  assert.equal(crossing.placed.length, 2);
+  assert.ok(api.bestTileMove(board, "STONER"));
+  const extensionBoard = Array(100).fill(null);
+  [..."STAR"].forEach((letter, i) => { extensionBoard[42 + i] = letter; });
+  const extension = api.tileMove(extensionBoard, "TLE", "STARTLE", 4, 2, "across");
+  assert.equal(extension.score, 7);
+  assert.equal(extension.placed.length, 3);
+  const edgeBoard = Array(100).fill(null);
+  edgeBoard[96] = "S";
+  assert.equal(api.tileMove(edgeBoard, "TAR", "STAR", 9, 6, "across").score, 18);
+  assert.match(api.tileMove(edgeBoard, "STAR", "STAR", 9, 7, "across").error, /does not fit/);
+});
+
+test("Word Tiles validates cross words and scores premiums only for new tiles", () => {
+  const board = Array(100).fill(null);
+  board[2] = "A";
+  board[4] = "E";
+  const move = api.tileMove(board, "TAR", "TAR", 1, 2, "across");
+  assert.equal(move.error, undefined);
+  assert.deepEqual([...move.crossWords].map((cross) => cross.word), ["AT", "ER"]);
+  assert.equal(move.score, 9);
+  board[12] = "S";
+  board[2] = null;
+  board[4] = null;
+  assert.equal(api.tileMove(board, "TAR", "STAR", 1, 2, "across").score, 4);
+  board[3] = "B";
+  assert.match(api.tileMove(board, "TAR", "STAR", 1, 2, "across").error, /Cross word/);
+});
+
+test("Word Tiles scores word bonuses, cross words and reused squares", () => {
+  const doubleBoard = Array(100).fill(null);
+  doubleBoard[10] = "S";
+  assert.equal(api.tileMove(doubleBoard, "TAR", "STAR", 1, 0, "across").score, 10);
+  doubleBoard[11] = "T";
+  assert.equal(api.tileMove(doubleBoard, "AR", "STAR", 1, 0, "across").score, 5);
+
+  const tripleBoard = Array(100).fill(null);
+  tripleBoard[0] = "S";
+  assert.equal(api.tileMove(tripleBoard, "TAR", "STAR", 0, 0, "across").score, 15);
+
+  const stackedBoard = Array(100).fill(null);
+  stackedBoard[0] = "E";
+  const move = api.tileMove(stackedBoard, "STAR", "STAR", 0, 1, "down");
+  assert.equal(move.score, 54);
+  assert.deepEqual([...move.crossWords].map((cross) => [cross.word, cross.score]), [["ES", 6]]);
+  stackedBoard[1] = "S";
+  assert.equal(api.tileMove(stackedBoard, "TAR", "STAR", 0, 1, "down").score, 16);
+});
+
+test("Word Tiles refills unused tiles, plays the computer and restarts", () => {
   const elements = new Map();
   function element(id) {
     if (!elements.has(id)) elements.set(id, {
       textContent: "", innerHTML: "", value: "", disabled: false, attributes: {},
       setAttribute(name, value) { this.attributes[name] = value; },
       removeAttribute(name) { delete this.attributes[name]; },
-      querySelectorAll() { return []; },
+      querySelectorAll() {
+        if (id !== "tileBoard") return [];
+        return Array.from({ length: 100 }, (_, index) => {
+          const button = { dataset: { index }, focus() {} };
+          elements.set(`square${index}`, button);
+          return button;
+        });
+      },
+      querySelector() { return { focus() {} }; },
     });
     return elements.get(id);
   }
   const testContext = vm.createContext({ $: element });
   vm.runInContext(`${source}
-    shuffleActivity = (items) => items[0] === "STARES"
-      ? ["STONER", "STARES", "SCARET", "DREAMT", "SLATER"]
-      : [...items];
+    let capturedBag;
+    shuffleActivity = (items) => {
+      if (items.length > 10) capturedBag = [...items];
+      return [...items];
+    };
     renderWordTiles();`, testContext);
-  const submit = (word) => {
-    element("tileInput").value = word;
-    element("tileForm").onsubmit({ preventDefault() {} });
-  };
-  submit("note");
-  assert.equal(element("tileRound").textContent, "Round 2 of 5");
+  const capturedBag = vm.runInContext("capturedBag", testContext);
+  assert.equal([...new Set(capturedBag)].sort().join(""), "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+  assert.ok(capturedBag.filter((letter) => letter === "U").length >= 2);
+  element("tileDirection").value = "across";
+  assert.equal((element("tileBoard").innerHTML.match(/data-index=/g) || []).length, 100);
+  assert.match(element("tileBoard").innerHTML, /Row 10, column 10/);
+  assert.match(element("tileBoard").innerHTML, /Row 2, column 2, double word/);
+  assert.match(element("tileBoard").innerHTML, /Row 1, column 2, triple word/);
+  element("tileInput").value = "star";
+  element("tileForm").onsubmit({ preventDefault() {} });
+  assert.equal(element("score").textContent, 4);
+  assert.match(element("tileRack").attributes["aria-label"], /^Available letters: E, S,/);
+  assert.match(element("tileFeedback").textContent, /You played STAR for 4 points\. Computer played/);
+  assert.match(element("tileBag").textContent, /tiles left/);
+  vm.runInContext("bestTileMove = () => null", testContext);
+  element("tilePass").onclick();
+  assert.match(element("activityStatus").textContent, /Game over/);
+  assert.equal(element("tileInput").disabled, true);
+  element("tileRestart").onclick();
+  assert.equal(element("score").textContent, 0);
   assert.equal(element("tileRack").attributes["aria-label"], "Available letters: S, T, A, R, E, S");
-  submit("tas");
-  assert.match(element("tileError").textContent, /not in the built-in word list/);
-  assert.equal(element("tileRound").textContent, "Round 2 of 5");
-  submit("taser");
-  assert.equal(element("tileRound").textContent, "Round 3 of 5");
-  assert.equal(element("score").textContent, 9);
-  submit("xyz");
-  assert.match(element("tileError").textContent, /cannot be made/);
-  assert.equal(element("tileInput").attributes["aria-invalid"], "true");
-  submit("sac");
-  assert.equal(element("tileRound").textContent, "Round 4 of 5");
-  assert.equal(element("tileError").textContent, "");
-  assert.equal(element("tileInput").attributes["aria-invalid"], undefined);
-  submit(" ");
-  assert.match(element("tileError").textContent, /Enter a word/);
-  assert.equal(element("tileRound").textContent, "Round 4 of 5");
 });
 
 test("Word Guess handles repeated letters without overcounting", () => {

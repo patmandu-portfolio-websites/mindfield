@@ -149,8 +149,50 @@ const tileWords = [
   "SALES", "SEALS", "SALTS", "SLATS", "LAST", "LASE", "LETS", "TEALS",
   "ALERT", "ALTER", "LATER", "LASER", "STALE", "STEAL", "STARE", "TALES", "TEALS",
   "REAL", "EARL",
+  "STARES", "STRESS", "STONES", "STONER", "TENORS", "TONERS", "TRACES", "CRATES",
+  "CASTER", "REACTS", "RECAST", "CARETS", "CATERS", "CARTES", "DREAMT", "TRADES", "TREADS",
+  "SLATER", "ALERTS", "ALTERS", "LASTER", "SALTER", "SLATES", "STEALS", "STALER",
+  "ASSERT", "ASTERS", "TASERS", "ARTELS", "RATELS", "TALERS",
+  "STARTLE", "SLATERS", "SALTERS", "RESTART", "STERNAL", "STARTLES", "RESTARTS", "RESTARTED",
+  "MOST", "ANT", "ANTS", "ACTOR", "ACTORS", "ACORN", "ACORNS", "ACROSS", "ALSO", "ALONE",
+  "ALMOST", "AMEND", "AMENDS", "AMASS", "ANTE", "ANTES", "ANTLER", "ANTLERS", "ANCESTOR", "ADO",
+  "ADORE", "ADORES", "ADORED", "ADORN", "ADORNS", "ATOM", "ATOMS", "ATONE", "ATTEND", "ATTENDS",
+  "SOLE", "SOLES", "SOLO", "SOLOS", "SOME", "SORTED", "SLOT", "SLOTS", "SMALL", "SMALLER",
+  "SMART", "SMARTER", "SMELT", "SMELL", "SMELLS", "SMOTE", "MOLT", "MOLTS", "MOAN", "MOANS",
+  "MOAT", "MOATS", "MOON", "MOONS", "MOOR", "MOORS", "MORTAL", "MORTALS", "MOSS", "MESS",
+  "MAST", "MASTS", "MASTER", "MASTERS", "MATTER", "MATTERS", "METAL", "METALS", "MELT", "MELTS",
+  "MELTED", "MEND", "MENDS", "MENTAL", "MENTOR", "MENTORS", "MEET", "MEETS", "MERE", "METER",
+  "METERS", "METRE", "METRES", "MODEL", "MODELS", "MODEM", "MODEMS", "MODE", "MODES", "MODERN",
+  "ADD", "ADDS", "ADDED", "ADDER", "DAD", "DADS", "DANCE", "DANCES", "DANCED", "DANCER",
+  "DANCERS", "DENT", "DENTS", "DENSE", "DEN", "DENS", "DEMAND", "DEMANDS", "DOME", "DOMES",
+  "DONE", "DONOR", "DONORS", "DOOR", "DOORS", "DOSE", "DOSES", "DOT", "DOTS", "DOTTED",
+  "DRONE", "DRONES", "DRAMA", "DRAMAS", "DREAMS", "DREAMED", "DRESS", "DRESSES", "DRESSED", "LEMON",
+  "LEMONS", "LAND", "LANDS", "LANDED", "LANE", "LANES", "LASTED", "LASS", "LASSO", "LEAD",
+  "LEADS", "LEAN", "LEANS", "LEASE", "LEASES", "LEND", "LENDS", "LENT", "LENS", "LENSES",
+  "LONE", "LONER", "LONERS", "LOAN", "LOANS", "LOAD", "LOADS", "LOCAL", "LOCALS", "LOCATE",
+  "LOOM", "LOOMS", "LOOSE", "LOOSEN", "LORD", "LORDS", "LOSS", "LOSSES", "LOST", "LOT",
+  "LOTS", "LOSE", "LOSES", "LOSER", "LOSERS", "COAST", "COASTS", "COAL", "COALS", "COAT",
+  "COATS", "COASTAL", "CODE", "CODES", "CODED", "COD", "COLD", "COLON", "COLOR", "COLORS",
+  "COME", "COMES", "COMET", "COMETS", "COMMA", "CONE", "CONES", "CONSOLE", "CONSTANT", "CONTACT",
+  "CONTEST", "COSTS", "COT", "COTS", "COTTON", "CRAM", "CRAMS", "CRANE", "CRANES", "CRATER",
+  "CRATERS", "CREASE", "CREAM", "CROSS", "CROSSES",
+  "LESS", "LESSER", "LESSEN", "LESSENS", "LESSENED", "LESSON", "LESSONS",
+  "TEST", "TESTS", "TESTED", "TESTER", "TESTERS", "TESTAMENT", "TESTAMENTS",
+  "TELL", "TELLS", "TELLER", "TELLERS", "TOLD", "TOLL", "TOLLS", "TOLLED",
+  "SCAM", "SCAMS", "SCAMMED", "SCAMMER", "SCAMMERS", "SCRAM", "SCRAMS",
+  "SCREAM", "SCREAMS", "SCREAMED", "MASCOT", "MASCOTS", "SCORE", "SCORES", "SCORED",
+  "AA", "AB", "AD", "AE", "AG", "AH", "AI", "AL", "AM", "AN", "AR", "AS", "AT", "AW", "AX", "AY",
+  "BA", "BE", "BI", "BO", "BY", "DA", "DE", "DO", "EA", "ED", "EE", "EF", "EH", "EL", "EM",
+  "EN", "ER", "ES", "ET", "EX", "FA", "FE", "GI", "GO", "HA", "HE", "HI", "HM", "HO", "ID",
+  "IF", "IN", "IO", "IS", "IT", "JO", "KA", "KI", "LA", "LI", "LO", "MA", "ME", "MI", "MM",
+  "MO", "MU", "MY", "NA", "NE", "NO", "NU", "OD", "OE", "OF", "OH", "OI", "OK", "OM", "ON",
+  "OP", "OR", "OS", "OU", "OW", "OX", "OY", "PA", "PE", "PI", "PO", "QI", "RE", "SH", "SI",
+  "SO", "ST", "TA", "TE", "TI", "TO", "UH", "UM", "UN", "UP", "US", "UT", "WE", "WO", "XI",
+  "XU", "YA", "YE", "YO", "ZA",
 ];
 const tileRacks = ["STARES", "STONER", "SCARET", "DREAMT", "SLATER"];
+const tileBagLetters =
+  "AAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ";
 function canMakeWord(word, rack) {
   const letters = [...rack];
   return [...word].every((letter) => {
@@ -160,69 +202,252 @@ function canMakeWord(word, rack) {
     return true;
   });
 }
+const tileBoardSize = 10;
+const tileCenter = 4 * tileBoardSize + 4;
+const tileValues = {
+  A: 1, B: 3, C: 3, D: 2, E: 1, F: 4, G: 2, H: 4, I: 1, J: 8, K: 5, L: 1, M: 3,
+  N: 1, O: 1, P: 3, Q: 10, R: 1, S: 1, T: 1, U: 1, V: 4, W: 4, X: 8, Y: 4, Z: 10,
+};
+const tileDouble = new Set([3, 6, 12, 17, 30, 39, 60, 69, 82, 87, 93, 96]);
+const tileTriple = new Set([0, 9, 22, 27, 32, 37, 62, 67, 72, 77, 90, 99]);
+const tileDoubleWord = new Set([11, 18, 21, 28, 71, 78, 81, 88]);
+const tileTripleWord = new Set([1, 8, 91, 98]);
+const tileDictionary = new Set([...tileWords, ...tileAdditionalWords]);
+let tileWordTrie;
+
+function getTileWordTrie() {
+  if (tileWordTrie) return tileWordTrie;
+  tileWordTrie = {};
+  for (const word of tileDictionary) {
+    let node = tileWordTrie;
+    for (const letter of word) {
+      if (!node[letter]) node[letter] = {};
+      node = node[letter];
+    }
+    node.word = word;
+  }
+  return tileWordTrie;
+}
+
+function tileMove(board, rack, word, row, col, direction) {
+  if (!tileDictionary.has(word) || word.length < 2) return { error: "That word is not in the built-in word list." };
+  const dr = direction === "down" ? 1 : 0, dc = direction === "across" ? 1 : 0;
+  const inside = (r, c) => r >= 0 && r < tileBoardSize && c >= 0 && c < tileBoardSize;
+  const at = (r, c) => inside(r, c) ? board[r * tileBoardSize + c] : null;
+  const endRow = row + dr * (word.length - 1), endCol = col + dc * (word.length - 1);
+  if (!inside(row, col) || !inside(endRow, endCol)) return { error: "The word does not fit on the board." };
+  if (at(row - dr, col - dc) || at(endRow + dr, endCol + dc)) {
+    return { error: "Enter the complete word, including the letters already on the board." };
+  }
+  const placed = [], crossWords = [];
+  let connected = false, mainScore = 0, mainMultiplier = 1;
+  for (let i = 0; i < word.length; i++) {
+    const r = row + dr * i, c = col + dc * i, index = r * tileBoardSize + c;
+    const existing = board[index], letter = word[i];
+    if (existing && existing !== letter) return { error: "The word conflicts with a letter on the board." };
+    if (existing) {
+      connected = true;
+      mainScore += tileValues[letter];
+      continue;
+    }
+    placed.push({ index, letter });
+    const multiplier = tileDouble.has(index) ? 2 : tileTriple.has(index) ? 3 : 1;
+    const wordMultiplier = tileDoubleWord.has(index) ? 2 : tileTripleWord.has(index) ? 3 : 1;
+    mainMultiplier *= wordMultiplier;
+    mainScore += tileValues[letter] * multiplier;
+    let before = "", after = "", crossScore = tileValues[letter] * multiplier;
+    for (let step = 1; at(r - dc * step, c - dr * step); step++) {
+      const crossLetter = at(r - dc * step, c - dr * step);
+      before = crossLetter + before;
+      crossScore += tileValues[crossLetter];
+    }
+    for (let step = 1; at(r + dc * step, c + dr * step); step++) {
+      const crossLetter = at(r + dc * step, c + dr * step);
+      after += crossLetter;
+      crossScore += tileValues[crossLetter];
+    }
+    if (before || after) {
+      connected = true;
+      const crossWord = before + letter + after;
+      if (!tileDictionary.has(crossWord)) return { error: `Cross word ${crossWord} is not in the built-in word list.` };
+      crossWords.push({ word: crossWord, score: crossScore * wordMultiplier });
+    }
+  }
+  if (!placed.length) return { error: "Place at least one new tile." };
+  if (!canMakeWord(placed.map((tile) => tile.letter).join(""), rack)) return { error: "You do not have the letters needed for that word." };
+  const empty = board.every((letter) => !letter);
+  if (empty && !placed.some((tile) => tile.index === tileCenter)) return { error: "The first word must cover the center star." };
+  if (!empty && !connected) return { error: "Connect your word to a letter already on the board." };
+  return { placed, score: mainScore * mainMultiplier + crossWords.reduce((sum, cross) => sum + cross.score, 0), crossWords };
+}
+
+function bestTileMove(board, rack) {
+  let best = null;
+  const trie = getTileWordTrie(), counts = Object.create(null);
+  for (const letter of rack) counts[letter] = (counts[letter] || 0) + 1;
+  const letters = Object.keys(counts);
+  const empty = board.every((letter) => !letter);
+  for (const direction of ["across", "down"]) {
+    const dr = direction === "down" ? 1 : 0, dc = direction === "across" ? 1 : 0;
+    const inside = (r, c) => r >= 0 && r < tileBoardSize && c >= 0 && c < tileBoardSize;
+    const at = (r, c) => inside(r, c) ? board[r * tileBoardSize + c] : null;
+    const crossCache = new Map();
+    function crossAt(row, col) {
+      const index = row * tileBoardSize + col;
+      if (crossCache.has(index)) return crossCache.get(index);
+      let before = "", after = "";
+      for (let step = 1; at(row - dc * step, col - dr * step); step++) before = at(row - dc * step, col - dr * step) + before;
+      for (let step = 1; at(row + dc * step, col + dr * step); step++) after += at(row + dc * step, col + dr * step);
+      const cross = { before, after };
+      crossCache.set(index, cross);
+      return cross;
+    }
+    for (let row = 0; row < tileBoardSize; row++) {
+      for (let col = 0; col < tileBoardSize; col++) {
+        if (at(row - dr, col - dc)) continue;
+        if (empty && (direction === "across" ? row !== Math.floor(tileCenter / tileBoardSize) || col > tileCenter % tileBoardSize : col !== tileCenter % tileBoardSize || row > Math.floor(tileCenter / tileBoardSize))) continue;
+        function search(node, r, c, placed) {
+          if (!inside(r, c)) return;
+          const existing = at(r, c);
+          if (existing) {
+            const child = node[existing];
+            if (child) visit(child, r, c, placed);
+          } else {
+            const cross = crossAt(r, c);
+            for (const letter of letters) {
+              const child = node[letter];
+              if (!counts[letter] || !child) continue;
+              if ((cross.before || cross.after) && !tileDictionary.has(cross.before + letter + cross.after)) continue;
+              counts[letter]--;
+              visit(child, r, c, placed + 1);
+              counts[letter]++;
+            }
+          }
+        }
+        function visit(node, r, c, placed) {
+          if (node.word && placed && !at(r + dr, c + dc)) {
+            const move = tileMove(board, rack, node.word, row, col, direction);
+            if (!move.error && (!best || move.score > best.score)) best = { ...move, word: node.word, row, col, direction };
+          }
+          search(node, r + dr, c + dc, placed);
+        }
+        search(trie, row, col, 0);
+      }
+    }
+  }
+  return best;
+}
+
 function renderWordTiles() {
-  activityShell("Word Tiles", "Build a word of 3–5 letters from the shared six-letter rack. Each round has new letters. You and the computer each score one point per letter over five rounds. Only words in the built-in list count.", "Your points");
-  let round = 0, player = 0, computer = 0, rack = "", finished = false;
+  activityShell("Word Tiles", "Play against the computer on a 10 × 10 board. Select the first square and direction, then enter the complete word, including any board letters. The first word covers the star; later words must connect. Each player keeps unused tiles and draws back up to six. Only the built-in word list counts.", "Your points");
+  let board = Array(tileBoardSize * tileBoardSize).fill(null), player = 0, computer = 0, selected = tileCenter, passes = 0, finished = false;
   const racks = shuffleActivity(tileRacks);
+  let playerRack = racks[0], computerRack = racks[1];
+  const bag = shuffleActivity([...tileBagLetters]);
   $("activityContent").innerHTML = `
-    <div id="tileRound"></div><div class="tile-rack" id="tileRack" aria-label="Available letters"></div>
-    <details><summary>Show accepted words for this rack</summary><p id="tileDictionary"></p></details>
+    <p>Letter values are shown on the tiles. DL and TL double or triple a newly placed letter; DW and TW double or triple each word it makes. Bonuses are used only once, and multiple word bonuses multiply together. Two consecutive passes end the game, as does emptying a rack when the bag is empty.</p>
+    <div id="tileBoard" class="tile-board" style="--tile-columns: ${tileBoardSize}" aria-label="Word Tiles board"></div>
+    <div id="tileBag"></div><div class="tile-rack" id="tileRack" aria-label="Available letters"></div>
+    <details id="tileWordList"><summary>Show built-in word list</summary><p id="tileDictionary"></p></details>
     <form class="puzzle-controls" id="tileForm">
-      <label for="tileInput">Your word</label><input id="tileInput" autocomplete="off" maxlength="5" required aria-describedby="tileError">
+      <label for="tileDirection">Direction</label><select id="tileDirection"><option value="across">Across</option><option value="down">Down</option></select>
+      <label for="tileInput">Complete word</label><input id="tileInput" autocomplete="off" maxlength="${tileBoardSize}" required aria-describedby="tileError">
       <button type="submit">Play word</button><button type="button" id="tilePass">Pass</button>
     </form><div id="tileError" role="alert"></div><div id="tileScores"></div><div id="tileFeedback"></div>
     <div class="puzzle-controls"><button id="tileRestart">New game</button></div>`;
-  function showRound() {
-    $("tileRound").textContent = `Round ${round + 1} of 5`;
-    rack = shuffleActivity([...racks[round]]).join("");
-    $("tileRack").innerHTML = [...rack].map((letter) => `<span>${letter}</span>`).join("");
-    $("tileRack").setAttribute("aria-label", `Available letters: ${[...rack].join(", ")}`);
-    $("tileDictionary").textContent = [...new Set(tileWords)].filter((word) => word.length <= 5 && canMakeWord(word, rack)).sort().join(", ");
-    $("tileInput").value = "";
-    $("tileInput").removeAttribute("aria-invalid");
-    $("tileError").textContent = "";
-    $("tileScores").textContent = `You: ${player} · Computer: ${computer}`;
-    $("activityStatus").textContent = `Round ${round + 1}: make a word from the new letters.`;
-  }
-  function play(word) {
-    if (finished) return;
-    if (word && (word.length < 3 || word.length > 5 || !tileWords.includes(word) || !canMakeWord(word, rack))) {
-      $("tileInput").setAttribute("aria-invalid", "true");
-      $("tileError").textContent = canMakeWord(word, rack)
-        ? `"${word}" is not in the built-in word list. Open the accepted words list or try another word.`
-        : `"${word}" cannot be made from the current letters. Try another word.`;
-      return;
+  $("tileWordList").ontoggle = () => {
+    if ($("tileWordList").open && !$("tileDictionary").textContent) {
+      $("tileDictionary").textContent = [...tileDictionary].sort().join(", ");
     }
-    const options = [...new Set(tileWords)].filter((candidate) => candidate.length <= 5 && canMakeWord(candidate, rack));
-    options.sort((a, b) => b.length - a.length || a.localeCompare(b));
-    const computerWord = options[Math.floor(Math.random() * Math.min(4, options.length))];
-    player += word.length;
-    computer += computerWord.length;
+  };
+  function draw() {
+    $("tileBoard").innerHTML = board.map((letter, index) => {
+      const bonus = tileDouble.has(index) ? "DL" : tileTriple.has(index) ? "TL" : tileDoubleWord.has(index) ? "DW" : tileTripleWord.has(index) ? "TW" : index === tileCenter ? "★" : "";
+      const description = letter ? `${letter}, ${tileValues[letter]} points` : bonus === "DL" ? "double letter" : bonus === "TL" ? "triple letter" : bonus === "DW" ? "double word" : bonus === "TW" ? "triple word" : bonus ? "center star" : "empty";
+      const style = letter ? "occupied" : bonus === "DL" ? "double" : bonus === "TL" ? "triple" : bonus === "DW" ? "double-word" : bonus === "TW" ? "triple-word" : "";
+      return `<button type="button" class="tile-square ${style} ${selected === index ? "selected" : ""}" data-index="${index}" aria-label="Row ${Math.floor(index / tileBoardSize) + 1}, column ${index % tileBoardSize + 1}, ${description}" aria-pressed="${selected === index}">${letter ? `${letter}<small>${tileValues[letter]}</small>` : bonus}</button>`;
+    }).join("");
+    $("tileBoard").querySelectorAll("button").forEach((button) => {
+      button.onclick = () => {
+        selected = Number(button.dataset.index);
+        draw();
+        $("tileBoard").querySelector(`[data-index="${selected}"]`).focus();
+      };
+    });
+    $("tileRack").innerHTML = [...playerRack].map((letter) => `<span>${letter}<small>${tileValues[letter]}</small></span>`).join("");
+    $("tileRack").setAttribute("aria-label", `Available letters: ${[...playerRack].join(", ")}`);
+    $("tileBag").textContent = `${bag.length} tiles left in the bag.`;
+    $("tileScores").textContent = `You: ${player} · Computer: ${computer}`;
     $("score").textContent = player;
-    $("tileFeedback").textContent = `You played ${word || "nothing"}; computer played ${computerWord}.`;
-    round++;
-    if (round === 5) {
-      finished = true;
-      $("tileRound").textContent = "Game complete";
-      $("tileScores").textContent = `You: ${player} · Computer: ${computer}`;
-      $("activityStatus").textContent = player === computer ? "A tie!" : player > computer ? "You win!" : "The computer wins. Try again!";
-      $("tileInput").disabled = true;
-      $("tileForm").querySelectorAll("button").forEach((button) => { button.disabled = true; });
-    } else showRound();
+  }
+  function applyMove(move, rack) {
+    for (const tile of move.placed) {
+      board[tile.index] = tile.letter;
+      rack = rack.replace(tile.letter, "");
+    }
+    while (rack.length < 6 && bag.length) rack += bag.pop();
+    return rack;
+  }
+  function endGame() {
+    finished = true;
+    $("activityStatus").textContent = `Game over. ${player === computer ? "A tie!" : player > computer ? "You win!" : "The computer wins!"}`;
+    $("tileInput").disabled = true;
+    $("tileDirection").disabled = true;
+    $("tileForm").querySelectorAll("button").forEach((button) => { button.disabled = true; });
+  }
+  function computerTurn() {
+    const move = bestTileMove(board, computerRack);
+    if (move) {
+      computerRack = applyMove(move, computerRack);
+      computer += move.score;
+      passes = 0;
+      $("tileFeedback").textContent += ` Computer played ${move.word} for ${move.score} points.`;
+    } else {
+      passes++;
+      $("tileFeedback").textContent += " Computer passed.";
+    }
+    draw();
+    if (passes >= 2 || (!bag.length && !computerRack.length)) endGame();
+    else $("activityStatus").textContent = "Your turn. Select the first square of your word.";
   }
   $("tileForm").onsubmit = (event) => {
     event.preventDefault();
+    if (finished) return;
     const word = $("tileInput").value.trim().toUpperCase();
     if (!word) {
       $("tileInput").setAttribute("aria-invalid", "true");
       $("tileError").textContent = "Enter a word, or choose Pass.";
       return;
     }
-    play(word);
+    const move = tileMove(board, playerRack, word, Math.floor(selected / tileBoardSize), selected % tileBoardSize, $("tileDirection").value);
+    if (move.error) {
+      $("tileInput").setAttribute("aria-invalid", "true");
+      $("tileError").textContent = move.error;
+      return;
+    }
+    playerRack = applyMove(move, playerRack);
+    player += move.score;
+    passes = 0;
+    $("tileInput").value = "";
+    $("tileInput").removeAttribute("aria-invalid");
+    $("tileError").textContent = "";
+    $("tileFeedback").textContent = `You played ${word} for ${move.score} points.`;
+    draw();
+    if (!bag.length && !playerRack.length) endGame();
+    else computerTurn();
   };
-  $("tilePass").onclick = () => play("");
+  $("tilePass").onclick = () => {
+    if (finished) return;
+    $("tileInput").removeAttribute("aria-invalid");
+    $("tileError").textContent = "";
+    $("tileFeedback").textContent = "You passed.";
+    passes++;
+    if (passes >= 2) { draw(); endGame(); }
+    else computerTurn();
+  };
   $("tileRestart").onclick = renderWordTiles;
-  showRound();
+  draw();
+  $("activityStatus").textContent = "Your turn. Select the first square of your word.";
 }
 
 const wordGuessAnswers = [
